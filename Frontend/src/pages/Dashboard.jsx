@@ -1,20 +1,16 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   useEffect(() => {
     document.title = "TaskHub | Dashboard";
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
   return (
     <div>
       <h1>Dashboard</h1>
-      <button onClick={handleLogout}>logout</button>
+      <button onClick={logout}>logout</button>
     </div>
   );
 };

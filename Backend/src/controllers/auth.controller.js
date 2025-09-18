@@ -72,25 +72,53 @@ export const googleLogin = async (req, res) => {
     const payload = ticket.getPayload();
     const { email, name, picture } = payload;
 
-    let { user } = await findUserByEmail(email);
+    let user = await User.findOne({ email });
+
     if (!user) {
-      ({ user } = await createUserByType(email, type));
-      if (name) {
-        user.firstName = name.split(" ")[0] || "";
-        user.lastName = name.split(" ")[1] || "";
+      // create a new user
+      user = new User({
+        name: name || "Google User",
+        email,
+        password: Math.random().toString(36).slice(-8), // dummy password, not used
+      });
+
+      if (picture) {
+        // optionally add a profile image field to your schema
+        user.profileImg = picture;
       }
-      if (picture) user.profileImg = picture;
+
       await user.save();
     }
 
-    const jwtToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+    const jwtToken = jwt.sign({ id: user._id }, JWT_SECRET, {
       expiresIn: "30d",
     });
-    res
-      .status(200)
-      .json({ message: "Google login successful", token: jwtToken, user });
+
+    res.status(200).json({
+      message: "Google login successful",
+      token: jwtToken,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
   } catch (error) {
     console.error("Google login error:", error);
     res.status(500).json({ message: "Failed to login with Google" });
+  }
+};
+
+export const getUserData = async (req, res) => {
+  try {
+    const { id } = req.user;
+    if (!id) return res.status(401).json({ message: "Unauthorized" });
+
+    const user = await User.findById(id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({
+      message: "User data retrieved successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Failed to fetch user data" });
   }
 };

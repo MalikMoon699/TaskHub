@@ -1,15 +1,18 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export const ProtectedRoute = ({ children }) => {
-  if (!localStorage.getItem("token")) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
+  const { authAllow, loading } = useAuth();
+
+  if (loading) return <p>Loading...</p>
+
+  return authAllow ? children : <Navigate to="/login" replace />;
 };
 
 export const PublicRoute = ({ children }) => {
-  if (localStorage.getItem("token")) {
-    return <Navigate to="/" replace />;
-  }
-  return children;
+  const { authAllow, loading } = useAuth();
+
+  if (loading) return <p>Loading...</p>;
+
+  return authAllow ? <Navigate to="/" replace /> : children;
 };

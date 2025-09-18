@@ -133,9 +133,8 @@ const Login = () => {
           Sign In
         </button>
 
-        <div>
-          <span></span>
-          <span>OR</span>
+        <div className="or-container">
+          <p>OR</p>
         </div>
         <GoogleLogin
           onSuccess={handleGoogleSuccess}

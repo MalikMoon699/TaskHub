@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../assets/styles/Auth.css";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -49,14 +50,48 @@ const SignUp = () => {
 
       const data = await response.json();
       if (!response.ok) {
+        localStorage.setItem("token", data.token);
         toast.error(data.message || "Error signing up");
         return;
       }
-      toast.success("login successfully!");
+
+      toast.success("Account created! Please login.");
       navigate("/");
     } catch (error) {
       console.error("Signup failed:", error);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/google-login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: credentialResponse.credential,
+            type: "signup",
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        toast.success("Google signup successful!");
+        navigate("/");
+      } else {
+        toast.error(data.message || "Google signup failed");
+      }
+    } catch (err) {
+      toast.error("Google signup error: " + err.message);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google Sign-Up failed");
   };
 
   return (
@@ -115,6 +150,7 @@ const SignUp = () => {
             />
             {passwordError && <p className="error-message">{passwordError}</p>}
           </div>
+
           <div className="form-group">
             <label className="form-label">Confirm Password</label>
             <input
@@ -137,6 +173,15 @@ const SignUp = () => {
         <button onClick={handleSignUp} className="signup-button">
           Create account
         </button>
+
+        <div className="or-container">
+          <p>OR</p>
+        </div>
+
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
 
         <p className="signup-footer">
           Already have an account?{" "}

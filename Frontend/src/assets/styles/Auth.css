@@ -104,3 +104,24 @@
   text-align: start;
   padding: 6px 5px 0px;
 }
+
+.or-container {
+  background-color: #135dff;
+  height: 1px;
+  margin: 35px 0px 23px 0px;
+  color: #135dff;
+  padding: 0 10px;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.or-container > p {
+  position: absolute;
+  right: 43%;
+  top: 0;
+  color: #135dff;
+  font-weight: 500;
+  background-color: white;
+  padding: 0 10px;
+  transform: translateY(-50%);
+}

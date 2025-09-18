@@ -2,9 +2,11 @@ import { X } from "lucide-react";
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const CreateWorkSpace = ({ onClose }) => {
-    const {currentUser}=useAuth();
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState("Red");
   const [name, setName] = useState("");
   const [discription, setDiscription] = useState("");
@@ -37,7 +39,7 @@ const CreateWorkSpace = ({ onClose }) => {
             name,
             discription,
             workspaceColor: selectedColor,
-            userId: currentUser._id, 
+            userId: currentUser._id,
           }),
         }
       );
@@ -47,6 +49,7 @@ const CreateWorkSpace = ({ onClose }) => {
 
       toast.success("Workspace created successfully!");
       onClose();
+      navigate();
     } catch (error) {
       console.error(error);
     }

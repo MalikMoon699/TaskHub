@@ -13,7 +13,13 @@ export const createWorkSpace = async (req, res) => {
     if (!userId)
       return res.status(400).json({ message: "User ID is required!" });
 
-    const newWorkspace = new WorkSpaces({ name, discription, workspaceColor });
+    const newWorkspace = new WorkSpaces({
+      name,
+      discription,
+      workspaceColor,
+      members: [userId],
+    });
+
     await newWorkspace.save();
 
     await User.findByIdAndUpdate(

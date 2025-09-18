@@ -3,7 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import SignUp from "./auth/SignUp";
 import "./assets/styles/Style.css";
 import { ProtectedRoute, PublicRoute } from "./routes/RouteGuards";
-import Login from "./auth/login";
+import Login from "./auth/Login";
 
 function App() {
   return (

@@ -49,6 +49,11 @@
   padding-left: 4px;
 }
 
+.label-span {
+  font-size: 10px;
+  color: #9b9292;
+}
+
 .form-input {
   padding: 12px 5px;
   font-size: 16px;
@@ -59,6 +64,22 @@
 }
 
 .form-input:focus {
+  border-color: oklch(0.55 0.25 262.87);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.form-textarea {
+  padding: 12px 5px;
+  font-size: 16px;
+  height: 80px;
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  resize: none;
+}
+.form-textarea:focus {
   border-color: oklch(0.55 0.25 262.87);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }

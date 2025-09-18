@@ -5,11 +5,12 @@ import "./assets/styles/Style.css";
 import { ProtectedRoute, PublicRoute } from "./routes/RouteGuards";
 import Login from "./auth/Login";
 import { useAuth } from "./contexts/AuthContext";
+import NoWorkSpace from "./pages/NoWorkSpace";
 
 function App() {
-  const { userData } = useAuth();
+  const { currentUser } = useAuth();
 
-  console.log("userData-->", userData);
+  console.log("currentUser-->", currentUser);
 
   return (
     <Routes>
@@ -18,6 +19,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/workspace"
+        element={
+          <ProtectedRoute allowWithoutWorkspace>
+            <NoWorkSpace />
           </ProtectedRoute>
         }
       />

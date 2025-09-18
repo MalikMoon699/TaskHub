@@ -4,18 +4,17 @@ import { useNavigate } from "react-router-dom";
 const AuthCtx = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
-  const [authAllow, setAuthAllow] = useState(false); // authenticated or not
-  const [loading, setLoading] = useState(true); // loading state for auth check
-  const [isDetail, setIsDetail] = useState(true); // profile completeness check
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authAllow, setAuthAllow] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  const [isDetail, setIsDetail] = useState(true);
 
   const navigate = useNavigate();
 
-  // Fetch user info with token
   const fetchMe = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setUserData(null);
+      setCurrentUser(null);
       setAuthAllow(false);
       setIsDetail(false);
       setLoading(false);
@@ -36,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       const data = await res.json();
 
       if (res.ok) {
-        setUserData(data.user);
+        setCurrentUser(data.user);
         setAuthAllow(true);
 
         if (
@@ -63,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = (redirect = true) => {
     localStorage.removeItem("token");
-    setUserData(null);
+    setCurrentUser(null);
     setAuthAllow(false);
     setIsDetail(false);
     if (redirect) navigate("/login");
@@ -76,8 +75,8 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthCtx.Provider
       value={{
-        userData,
-        setUserData,
+        currentUser,
+        setCurrentUser,
         authAllow,
         setAuthAllow,
         loading,
@@ -92,5 +91,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook for consuming auth state anywhere
 export const useAuth = () => useContext(AuthCtx);

@@ -1,0 +1,121 @@
+.no-work-space-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.no-work-space-inner-container {
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.no-work-space-title {
+  padding: 3px 0px 5px 0px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.no-work-space-description {
+  color: #6c6565;
+  font-size: 12px;
+  font-weight: 500;
+  padding-bottom: 15px;
+}
+
+.no-work-space-button {
+  background-color: oklch(0.55 0.25 262.87);
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  gap: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.no-work-space-button:hover {
+  background-color: oklch(55.074% 0.24834 262.736 / 0.843);
+}
+
+.workspace-create-btn {
+  background-color: oklch(0.55 0.25 262.87);
+}
+
+.workspace-cencel-btn {
+  background-color: white;
+}
+
+.modal-body {
+  padding: 20px 0px;
+}
+
+.modal-close-btn {
+  color: #757575;
+  border: none;
+  font-size: 0px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  padding: 1px 3px;
+  border-radius: 4px;
+}
+
+.modal-close-btn:hover {
+  background-color: #e9e5e5;
+}
+
+.color-list {
+  gap: 5px;
+  padding: 7px 1px;
+}
+
+.color-item {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-dot {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.color-active {
+  border-radius: 50%;
+  padding: 1px;
+  border: 1px solid oklch(0.55 0.25 262.87);
+}
+
+.cencel-btn {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 3px 6px;
+  font-weight: 600;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.create-btn {
+  background-color: oklch(0.55 0.25 262.87);
+  color: white;
+  border: 1px solid oklch(0.55 0.25 262.87);
+  padding: 3px 6px;
+  font-weight: 600;
+  border-radius: 3px;
+  cursor: pointer;
+}

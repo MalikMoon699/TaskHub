@@ -1,0 +1,96 @@
+// src/controllers/auth.controller.js
+import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+import { signUpSchema, loginSchema } from "../schemas/auth.schema.js";
+
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+
+export const signUp = async (req, res) => {
+  try {
+    const parsed = signUpSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ errors: parsed.error.errors });
+    }
+
+    const { name, email, password } = parsed.data;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    const user = new User({ name, email, password });
+    await user.save();
+
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ errors: parsed.error.errors });
+    }
+
+    const { email, password } = parsed.data;
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { token, type } = req.body;
+    if (!token)
+      return res.status(400).json({ message: "Google token required" });
+
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    let { user } = await findUserByEmail(email);
+    if (!user) {
+      ({ user } = await createUserByType(email, type));
+      if (name) {
+        user.firstName = name.split(" ")[0] || "";
+        user.lastName = name.split(" ")[1] || "";
+      }
+      if (picture) user.profileImg = picture;
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+    res
+      .status(200)
+      .json({ message: "Google login successful", token: jwtToken, user });
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(500).json({ message: "Failed to login with Google" });
+  }
+};

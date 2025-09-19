@@ -16,7 +16,9 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
     const fetchWorkSpaces = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/workspaces/${currentUser._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/workspaces/${
+            currentUser._id
+          }`
         );
         const data = await res.json();
 

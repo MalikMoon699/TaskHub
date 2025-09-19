@@ -6,6 +6,7 @@ import cors from "cors";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import workspaces from "./routes/workSpace.routes.js";
+import project from "./routes/project.routes.js";
 
 import connectToDB from "./database/mongodb.js";
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/workspaces", workspaces);
+app.use("/api/project", project);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Server API");

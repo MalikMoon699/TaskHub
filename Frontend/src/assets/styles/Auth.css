@@ -54,6 +54,15 @@
   color: #9b9292;
 }
 
+.form-selector {
+  padding: 12px 5px;
+  font-size: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  cursor: pointer;
+}
+
 .form-input {
   padding: 12px 5px;
   font-size: 16px;

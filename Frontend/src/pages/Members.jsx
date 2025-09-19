@@ -1,10 +1,12 @@
 import { CirclePlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import InviteMember from "../components/InviteMember";
 
 const Members = () => {
   const { selectedWorkSpace } = useOutletContext();
   const [members, setMembers] = useState([]);
+  const [isInvite,setIsInvite]=useState(false)
 
   useEffect(() => {
     if (!selectedWorkSpace) return;
@@ -12,7 +14,9 @@ const Members = () => {
     const fetchMembers = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/workspaces/members/${selectedWorkSpace}`
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/workspaces/members/${selectedWorkSpace}`
         );
         const data = await res.json();
 
@@ -33,9 +37,9 @@ const Members = () => {
     <div>
       <div className="local-header flex align-item-center justify-content-space">
         <h3 className="local-header-title">Members</h3>
-        <button className="local-header-btn">
+        <button onClick={() => setIsInvite(true)} className="local-header-btn">
           <CirclePlus size={18} />
-          Add Member
+          invite Member
         </button>
       </div>
       {members.length === 0 ? (
@@ -49,6 +53,7 @@ const Members = () => {
           ))}
         </ul>
       )}
+      {isInvite && <InviteMember onClose={() => setIsInvite(false)} />}
     </div>
   );
 };

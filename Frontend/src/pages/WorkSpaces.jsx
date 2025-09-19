@@ -3,9 +3,10 @@ import { useAuth } from "../contexts/AuthContext";
 import { CirclePlus, Presentation, Users } from "lucide-react";
 import CreateWorkSpace from "../components/CreateWorkSpace";
 import "../assets/styles/WorkSpace.css";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 
 const WorkSpaces = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { setSelectedWorkSpace, selectedWorkSpace } = useOutletContext();
   const [isCreateWorkSpace, setIsCreateWorkSpace] = useState(false);
@@ -17,7 +18,9 @@ const WorkSpaces = () => {
     const fetchWorkSpaces = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/workspaces/${currentUser._id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/workspaces/${
+            currentUser._id
+          }`
         );
         const data = await res.json();
 
@@ -75,6 +78,7 @@ const WorkSpaces = () => {
             }}
             onClick={() => {
               setSelectedWorkSpace(item._id);
+              navigate("/projects");
             }}
             key={item._id || index}
             className="workspace-card"

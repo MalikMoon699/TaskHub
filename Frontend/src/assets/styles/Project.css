@@ -1,0 +1,130 @@
+.create-project-members-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 0px;
+  gap: 2px;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px #00000038;
+  border-radius: 4px;
+}
+
+.create-project-member-item {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+  padding: 4px;
+  width: 100%;
+  border: 1px solid #00000017;
+}
+
+.project-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: sans-serif;
+  width: 420px;
+  transition: all 0.3s ease-in-out;
+}
+
+.project-card:hover {
+  transform: translate(0px, -6px);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.104);
+}
+
+/* Header section */
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.project-description {
+  font-size: 14px;
+  color: #6b7280; /* gray-500 */
+  margin: 0;
+}
+
+/* Status badge */
+.project-status span {
+  background: #f3e8ff; /* light purple */
+  color: #7c3aed; /* purple-600 */
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+/* Progress bar */
+.project-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-progress-label {
+  font-size: 13px;
+  color: #374151; /* gray-700 */
+}
+
+.project-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb; 
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.project-progress-fill {
+  height: 100%;
+  background: #2166fe;
+  /* background: #93c5fd; */
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.project-progress-percent {
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* Footer */
+.project-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.project-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-calendar-icon {
+  width: 14px;
+  height: 14px;
+}

@@ -1,0 +1,66 @@
+.workspace-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.workspace-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.workspace-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.workspace-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.workspace-date {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.workspace-stats {
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.workspace-members,
+.workspace-projects {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.workspace-description {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #4b5563;
+}

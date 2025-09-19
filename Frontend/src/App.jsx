@@ -14,7 +14,7 @@ import Settings from "./pages/Settings";
 import AppLayout from "./layouts/AppLayout";
 import Projects from "./pages/Projects";
 
-function App() {
+const App=()=> {
   const { currentUser } = useAuth();
 
   console.log("currentUser-->", currentUser);

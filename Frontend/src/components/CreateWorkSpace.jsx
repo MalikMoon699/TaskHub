@@ -49,7 +49,7 @@ const CreateWorkSpace = ({ onClose }) => {
 
       toast.success("Workspace created successfully!");
       onClose();
-      navigate();
+      navigate("/");
     } catch (error) {
       console.error(error);
     }

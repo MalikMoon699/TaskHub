@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Presentation, Users } from "lucide-react";
 import CreateWorkSpace from "../components/CreateWorkSpace";
+import "../assets/styles/WorkSpace.css";
+import { useOutletContext } from "react-router";
 
 const WorkSpaces = () => {
   const { currentUser } = useAuth();
+  const { setSelectedWorkSpace, selectedWorkSpace } = useOutletContext();
   const [isCreateWorkSpace, setIsCreateWorkSpace] = useState(false);
   const [workSpaces, setWorkSpaces] = useState([]);
 
@@ -30,6 +33,26 @@ const WorkSpaces = () => {
 
     fetchWorkSpaces();
   }, [currentUser]);
+
+  const getFirstLetter = (workspaceName) => {
+    return workspaceName.charAt(0).toUpperCase();
+  };
+
+  const formatDateTime = (timestamp) => {
+    if (!timestamp) return "";
+
+    const date = new Date(timestamp);
+
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   return (
     <div>
       <div className="local-header flex align-item-center justify-content-space">
@@ -44,11 +67,48 @@ const WorkSpaces = () => {
           New Workspace
         </button>
       </div>
-      {workSpaces.map((item, index) => (
-        <div key={item._id || index}>
-          <h1 style={{ color: item.workspaceColor }}>{item.name}</h1>
-        </div>
-      ))}
+      <div style={{ paddingTop: "10px" }}>
+        {workSpaces.map((item, index) => (
+          <div
+            style={{
+              backgroundColor: selectedWorkSpace === item._id ? "#ccd6ed" : "",
+            }}
+            onClick={() => {
+              setSelectedWorkSpace(item._id);
+            }}
+            key={item._id || index}
+            className="workspace-card"
+          >
+            <div className="flex align-item-center justify-content-space">
+              <div className="workspace-header">
+                <div
+                  className="workspace-avatar"
+                  style={{ backgroundColor: item.workspaceColor }}
+                >
+                  {getFirstLetter(item.name)}
+                </div>
+                <div className="workspace-info">
+                  <h1 className="workspace-title">{item.name}</h1>
+                  <p className="workspace-date">
+                    Created At {formatDateTime(item.createdAt)}
+                  </p>
+                </div>
+              </div>
+              <div className="workspace-stats flex align-items-center justify-content-center">
+                <span className="workspace-members">
+                  <Users className="icon" />
+                  {item.members.length}
+                </span>
+                <span className="workspace-projects">
+                  <Presentation className="icon" />
+                  {item?.projects?.length}
+                </span>
+              </div>
+            </div>
+            <p className="workspace-description">{item?.discription}</p>
+          </div>
+        ))}
+      </div>
       {isCreateWorkSpace && (
         <CreateWorkSpace
           onClose={() => {

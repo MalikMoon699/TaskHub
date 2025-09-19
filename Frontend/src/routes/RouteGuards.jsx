@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export const ProtectedRoute = ({ children, allowWithoutWorkspace = false }) => {
@@ -20,8 +20,13 @@ export const ProtectedRoute = ({ children, allowWithoutWorkspace = false }) => {
 
 export const PublicRoute = ({ children }) => {
   const { authAllow, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) return <p>Loading...</p>;
+
+  if (authAllow && location.pathname.startsWith("/invite/")) {
+    return children;
+  }
 
   return authAllow ? <Navigate to="/" replace /> : children;
 };

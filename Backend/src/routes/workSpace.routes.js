@@ -5,13 +5,21 @@ import {
   getUserWorkSpaces,
   getWorkspaceMembers,
   addMemberToWorkspace,
+  sendWorkspaceInvite,
+  acceptWorkspaceInvite,
+  declineWorkspaceInvite,
 } from "../controllers/workSpace.controller.js";
 
 const router = express.Router();
 
 router.post("/", createWorkSpace);
+router.get("/:userId", getUserWorkSpaces);
+
 router.get("/members/:workspaceId", getWorkspaceMembers);
 router.post("/members/:workspaceId", addMemberToWorkspace);
-router.get("/:userId", getUserWorkSpaces);
+
+router.post("/invite/:workspaceId", sendWorkspaceInvite);
+router.get("/invite/accept/:token", acceptWorkspaceInvite);
+router.get("/invite/decline/:token", declineWorkspaceInvite);
 
 export default router;

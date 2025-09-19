@@ -13,6 +13,7 @@ import Achived from "./pages/Achived";
 import Settings from "./pages/Settings";
 import AppLayout from "./layouts/AppLayout";
 import Projects from "./pages/Projects";
+import InvitePage from "./pages/InvitePage";
 
 const App=()=> {
   const { currentUser } = useAuth();
@@ -28,6 +29,14 @@ const App=()=> {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/invite/:token"
+          element={
+            <PublicRoute>
+              <InvitePage />
+            </PublicRoute>
           }
         />
         <Route

@@ -1,13 +1,40 @@
 import { SendHorizontal, X } from "lucide-react";
 import React, { useState } from "react";
+import { useOutletContext } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 
 const InviteMember = ({ onClose }) => {
   const [email, setEmail] = useState("");
+  const { currentUser } = useAuth();
   const [emailError, setEmailError] = useState("");
+  const { selectedWorkSpace } = useOutletContext();
 
   const handleSendInvite = async () => {
     if (!email) return setEmailError("member email is required!");
-    console.log("send");
+
+    try {
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/workspaces/invite/${selectedWorkSpace}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, inviterId: currentUser._id }),
+        }
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Invite sent!");
+        onClose();
+      } else {
+        setEmailError(data.message || "Failed to send invite");
+      }
+    } catch (err) {
+      console.error(err);
+      setEmailError("Something went wrong");
+    }
   };
 
   return (

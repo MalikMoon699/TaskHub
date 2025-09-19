@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }) => {
           !data.user.gender
         ) {
           setIsDetail(false);
-          navigate("/signup-details");
         } else {
           setIsDetail(true);
         }

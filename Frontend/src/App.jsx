@@ -6,6 +6,13 @@ import { ProtectedRoute, PublicRoute } from "./routes/RouteGuards";
 import Login from "./auth/Login";
 import { useAuth } from "./contexts/AuthContext";
 import NoWorkSpace from "./pages/NoWorkSpace";
+import WorkSpaces from "./pages/WorkSpaces";
+import MyTasks from "./pages/MyTasks";
+import Members from "./pages/Members";
+import Achived from "./pages/Achived";
+import Settings from "./pages/Settings";
+import AppLayout from "./layouts/AppLayout";
+import Projects from "./pages/Projects";
 
 function App() {
   const { currentUser } = useAuth();
@@ -14,14 +21,64 @@ function App() {
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+      <Route element={<AppLayout />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/workspaces"
+          element={
+            <ProtectedRoute>
+              <WorkSpaces />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mytasks"
+          element={
+            <ProtectedRoute>
+              <MyTasks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/members"
+          element={
+            <ProtectedRoute>
+              <Members />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/achived"
+          element={
+            <ProtectedRoute>
+              <Achived />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
       <Route
         path="/workspace"
         element={

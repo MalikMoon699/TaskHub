@@ -31,7 +31,7 @@ const CreateWorkSpace = ({ onClose }) => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/createWorkSpace`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/workspaces`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -101,8 +101,10 @@ const CreateWorkSpace = ({ onClose }) => {
               }}
             />
           </div>
-          <div>
-            <label htmlFor="">Workspace Color</label>
+          <div className="form-group">
+            <label htmlFor="" className="form-label">
+              Workspace Color
+            </label>
             <div className="color-list flex align-item-center justify-content-start">
               {colors.map((color, index) => (
                 <div

@@ -4,14 +4,19 @@ import Sidebar from "../components/Sidebar";
 import TopBar from "../components/Topbar";
 
 const AppLayout = () => {
-  const [searchTxt, setSearchText] = useState("");
+  const [selectedWorkSpace, setSelectedWorkSpace] = useState(null);
 
   return (
     <div className="app-container">
       <Sidebar />
       <div className="main-content">
-        <TopBar searchTxt={searchTxt} setSearchText={setSearchText} />
-        <Outlet context={{ searchTxt, setSearchText }} />
+        <TopBar
+          selectedWorkSpace={selectedWorkSpace}
+          setSelectedWorkSpace={setSelectedWorkSpace}
+        />
+        <div className="app-content">
+          <Outlet context={{ selectedWorkSpace, setSelectedWorkSpace }} />
+        </div>
       </div>
     </div>
   );

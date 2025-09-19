@@ -1,0 +1,105 @@
+.topbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 30px;
+  gap: 10px;
+  padding: 12px;
+  background: #fafafa;
+  font-weight: 500;
+  width: 100%;
+  border-bottom: 1px solid #dfdfdf;
+}
+
+.topbar-left-side {
+  width: 50%;
+}
+
+.topbar-right-side {
+  width: 50%;
+}
+
+.workspace-selector-container {
+  position: relative;
+}
+
+.workspace-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  max-width: 130px;
+  font-size: 10px;
+  font-weight: 600;
+  border: 1px solid #dbdbdb;
+  padding: 5px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selector-workspace-name {
+  max-width: 105px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workspace-dropdown {
+  position: absolute;
+  background-color: white;
+  width: 120px;
+  box-shadow: 0px 0px 3px black;
+  border-radius: 5px;
+}
+
+.workspace-dropdown-item {
+  max-width: 120px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 4px 4px;
+  border-bottom: 1px solid #dfdfdf;
+  cursor: pointer;
+}
+
+.workspace-dropdown-item:hover {
+  background-color: #ebebeba8;
+}
+
+.workspace-dropdown-create {
+  max-width: 120px;
+  font-size: 11px;
+  font-weight: 300;
+  white-space: nowrap;
+  padding: 4px 3px;
+  cursor: pointer;
+}
+
+.workspace-dropdown-create:hover {
+  background-color: #ebebeba8;
+}
+
+.topbar-actions {
+  width: fit-content;
+  gap: 10px;
+}
+
+.topbar-action-btn {
+  font-size: 0px;
+  cursor: pointer;
+  background: white;
+  border: 1px solid #dfdfdf;
+  padding: 8px 8px;
+  border-radius: 8px;
+}
+
+.topbar-profile-btn {
+  cursor: pointer;
+  border: none;
+  background: black;
+  color: white;
+  padding: 0px 12px;
+  border-radius: 50%;
+}

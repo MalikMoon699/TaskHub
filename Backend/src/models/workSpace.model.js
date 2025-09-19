@@ -5,7 +5,7 @@ const workSpacesSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     discription: { type: String },
-    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     workspaceColor: { type: String, required: true },
   },
   { timestamps: true }

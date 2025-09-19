@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import Loader from "./Loader";
 
 const CreateWorkSpace = ({ onClose }) => {
   const { currentUser } = useAuth();
@@ -11,6 +12,7 @@ const CreateWorkSpace = ({ onClose }) => {
   const [name, setName] = useState("");
   const [discription, setDiscription] = useState("");
   const [nameError, setNameError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const colors = [
     "Red",
@@ -30,6 +32,7 @@ const CreateWorkSpace = ({ onClose }) => {
     }
 
     try {
+      setLoading(true);
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/workspaces`,
         {
@@ -48,15 +51,17 @@ const CreateWorkSpace = ({ onClose }) => {
       if (!response.ok) return alert(data.message);
 
       toast.success("Workspace created successfully!");
+      navigate("/workspaces");
       onClose();
-      navigate("/");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div onClick={onClose} className="modal-overlay">
+    <div disabled={loading} onClick={onClose} className="modal-overlay">
       <div
         onClick={(e) => {
           e.stopPropagation();
@@ -65,7 +70,11 @@ const CreateWorkSpace = ({ onClose }) => {
       >
         <div className="modal-header flex align-item-center justify-content-space">
           <h3 className="modal-title">Create New Workspace</h3>
-          <button className="modal-close-btn" onClick={onClose}>
+          <button
+            disabled={loading}
+            className="modal-close-btn"
+            onClick={onClose}
+          >
             <X size={15} color="#757575" />
           </button>
         </div>
@@ -123,11 +132,24 @@ const CreateWorkSpace = ({ onClose }) => {
             style={{ gap: "5px", marginBottom: "-20px" }}
             className="flex align-item-center justify-content-end"
           >
-            <button onClick={onClose} className="cencel-btn">
+            <button disabled={loading} onClick={onClose} className="cencel-btn">
               Cancel
             </button>
-            <button onClick={handleCreate} className="create-btn">
-              Create
+            <button
+              disabled={loading}
+              onClick={handleCreate}
+              className="create-btn"
+            >
+              {loading ? (
+                <Loader
+                  color="white"
+                  size="18"
+                  style={{ height: "20px", width: "46px" }}
+                  loading={true}
+                />
+              ) : (
+                "Create"
+              )}
             </button>
           </div>
         </div>

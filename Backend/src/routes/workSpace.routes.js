@@ -8,6 +8,7 @@ import {
   sendWorkspaceInvite,
   acceptWorkspaceInvite,
   declineWorkspaceInvite,
+  getWorkspaceById,
 } from "../controllers/workSpace.controller.js";
 
 const router = express.Router();
@@ -15,6 +16,7 @@ const router = express.Router();
 router.post("/", createWorkSpace);
 router.get("/:userId", getUserWorkSpaces);
 
+router.get("/workspace/:workspaceId", getWorkspaceById); 
 router.get("/members/:workspaceId", getWorkspaceMembers);
 router.post("/members/:workspaceId", addMemberToWorkspace);
 

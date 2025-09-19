@@ -15,7 +15,7 @@ import AppLayout from "./layouts/AppLayout";
 import Projects from "./pages/Projects";
 import InvitePage from "./pages/InvitePage";
 
-const App=()=> {
+const App = () => {
   const { currentUser } = useAuth();
 
   console.log("currentUser-->", currentUser);
@@ -88,14 +88,16 @@ const App=()=> {
           }
         />
       </Route>
-      <Route
-        path="/workspace"
-        element={
-          <ProtectedRoute allowWithoutWorkspace>
-            <NoWorkSpace />
-          </ProtectedRoute>
-        }
-      />
+      {currentUser?.workSpaces?.length < 1 && (
+        <Route
+          path="/workspace"
+          element={
+            <ProtectedRoute allowWithoutWorkspace>
+              <NoWorkSpace />
+            </ProtectedRoute>
+          }
+        />
+      )}
 
       <Route
         path="/login"
@@ -117,6 +119,6 @@ const App=()=> {
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
-}
+};
 
 export default App;

@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { CirclePlus, Presentation, Users } from "lucide-react";
 import CreateWorkSpace from "../components/CreateWorkSpace";
 import "../assets/styles/WorkSpace.css";
+import Loader from "../components/Loader";
 import { useNavigate, useOutletContext } from "react-router";
 
 const WorkSpaces = () => {
@@ -11,11 +12,13 @@ const WorkSpaces = () => {
   const { setSelectedWorkSpace, selectedWorkSpace } = useOutletContext();
   const [isCreateWorkSpace, setIsCreateWorkSpace] = useState(false);
   const [workSpaces, setWorkSpaces] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!currentUser?._id) return;
 
     const fetchWorkSpaces = async () => {
+      setLoading(true);
       try {
         const res = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/workspaces/${
@@ -31,6 +34,8 @@ const WorkSpaces = () => {
         }
       } catch (error) {
         console.error("Error fetching workspaces:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -56,7 +61,9 @@ const WorkSpaces = () => {
     });
   };
 
-  return (
+  return loading ? (
+    <Loader loading={true} size="50" style={{height:"85vh",width:"100%"}}/>
+  ) : (
     <div>
       <div className="local-header flex align-item-center justify-content-space">
         <h3 className="local-header-title">Workspaces</h3>

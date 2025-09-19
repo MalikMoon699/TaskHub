@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const InvitePage = () => {
   const { token } = useParams();
@@ -25,7 +26,7 @@ const InvitePage = () => {
         if (res.ok) {
           setStatus("success");
           setMessage(data.message || "Invite accepted!");
-          setTimeout(() => navigate("/workspaces"), 2000); // redirect after 2s
+          setTimeout(() => navigate("/workspaces"), 2000);
         } else {
           setStatus("error");
           setMessage(data.message || "Failed to accept invite");
@@ -42,9 +43,11 @@ const InvitePage = () => {
 
   return (
     <div className="invite-page">
-      {status === "loading" && <p>Accepting invite...</p>}
-      {status === "success" && <p style={{ color: "green" }}>{message}</p>}
-      {status === "error" && <p style={{ color: "red" }}>{message}</p>}
+      <Loader
+        loading={true}
+        size="50"
+        style={{ height: "80vh", width: "100%" }}
+      />
     </div>
   );
 };

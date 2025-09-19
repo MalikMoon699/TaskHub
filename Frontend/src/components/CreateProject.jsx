@@ -175,6 +175,7 @@ const CreateProject = ({ onClose }) => {
                 style={{ borderColor: startDateError ? "red" : "" }}
                 placeholder="Project title"
                 value={startDate}
+                // min={today}
                 onChange={(e) => {
                   setStartDate(e.target.value);
                   setStartDateError("");
@@ -195,6 +196,7 @@ const CreateProject = ({ onClose }) => {
                 placeholder="Project title"
                 style={{ borderColor: dueDateError ? "red" : "" }}
                 value={dueDate}
+                // min={startDate + 1}
                 onChange={(e) => {
                   setDueDate(e.target.value);
                   setDueDateError("");

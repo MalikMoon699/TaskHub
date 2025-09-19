@@ -19,6 +19,7 @@ export const createWorkSpace = async (req, res) => {
       discription,
       workspaceColor,
       members: [userId],
+      createdBy: userId,
     });
 
     await newWorkspace.save();
@@ -51,6 +52,28 @@ export const getUserWorkSpaces = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching workspaces:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Get single workspace by ID
+export const getWorkspaceById = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const workspace = await WorkSpaces.findById(workspaceId)
+      .populate("members", "firstName lastName email")
+      .populate("projects");
+
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    res.status(200).json({
+      message: "Workspace fetched successfully",
+      workspace,
+    });
+  } catch (error) {
+    console.error("Error fetching workspace:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

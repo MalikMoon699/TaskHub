@@ -6,8 +6,13 @@ const workSpacesSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     discription: { type: String },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }], 
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
     workspaceColor: { type: String, required: true },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -1,10 +1,17 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import Loader from "../components/Loader";
 
 export const ProtectedRoute = ({ children, allowWithoutWorkspace = false }) => {
   const { authAllow, loading, currentUser } = useAuth();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <Loader
+      loading={true}
+      size="50"
+      style={{ height: "85vh", width: "100%" }}
+    />
+  );
 
   if (!authAllow) return <Navigate to="/login" replace />;
 

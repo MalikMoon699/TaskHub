@@ -2,17 +2,21 @@ import { SendHorizontal, X } from "lucide-react";
 import React, { useState } from "react";
 import { useOutletContext } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "react-toastify";
+import Loader from "./Loader";
 
 const InviteMember = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const { currentUser } = useAuth();
   const [emailError, setEmailError] = useState("");
   const { selectedWorkSpace } = useOutletContext();
+  const [loading, setLoading] = useState(false);
 
   const handleSendInvite = async () => {
     if (!email) return setEmailError("member email is required!");
 
     try {
+      setLoading(true);
       const res = await fetch(
         `${
           import.meta.env.VITE_BACKEND_URL
@@ -26,7 +30,7 @@ const InviteMember = ({ onClose }) => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Invite sent!");
+        toast.success("Invite sent!");
         onClose();
       } else {
         setEmailError(data.message || "Failed to send invite");
@@ -34,6 +38,8 @@ const InviteMember = ({ onClose }) => {
     } catch (err) {
       console.error(err);
       setEmailError("Something went wrong");
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -75,7 +81,11 @@ const InviteMember = ({ onClose }) => {
             onClick={handleSendInvite}
             className="create-btn"
           >
+            {loading ? 
+            <Loader loading={true} color="white" size="20" style={{height:"23px", width:"23px"}}/>
+            : 
             <SendHorizontal />
+            }
           </button>
         </div>
       </div>

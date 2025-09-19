@@ -2,16 +2,19 @@ import { CirclePlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import InviteMember from "../components/InviteMember";
+import Loader from "../components/Loader";
 
 const Members = () => {
   const { selectedWorkSpace } = useOutletContext();
   const [members, setMembers] = useState([]);
-  const [isInvite,setIsInvite]=useState(false)
+  const [isInvite, setIsInvite] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!selectedWorkSpace) return;
 
     const fetchMembers = async () => {
+      setLoading(true);
       try {
         const res = await fetch(
           `${
@@ -27,13 +30,17 @@ const Members = () => {
         }
       } catch (error) {
         console.error("Error fetching members:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchMembers();
   }, [selectedWorkSpace]);
 
-  return (
+  return loading ? (
+    <Loader loading={true} size="50" style={{ height: "85vh", width: "100%" }} />
+  ) : (
     <div>
       <div className="local-header flex align-item-center justify-content-space">
         <h3 className="local-header-title">Members</h3>

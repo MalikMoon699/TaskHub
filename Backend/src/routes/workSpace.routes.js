@@ -10,6 +10,9 @@ import {
   declineWorkspaceInvite,
   getWorkspaceById,
   removeMemberFromWorkspace,
+  updateWorkspace,
+  transferWorkspaceOwnership,
+  deleteWorkspace,
 } from "../controllers/workSpace.controller.js";
 
 const router = express.Router();
@@ -25,5 +28,9 @@ router.delete("/members/:workspaceId/:memberId", removeMemberFromWorkspace);
 router.post("/invite/:workspaceId", sendWorkspaceInvite);
 router.get("/invite/accept/:token", acceptWorkspaceInvite);
 router.get("/invite/decline/:token", declineWorkspaceInvite);
+
+router.put("/workspace/:workspaceId", updateWorkspace);
+router.put("/workspace/:workspaceId/transfer", transferWorkspaceOwnership);
+router.delete("/workspace/:workspaceId", deleteWorkspace);
 
 export default router;

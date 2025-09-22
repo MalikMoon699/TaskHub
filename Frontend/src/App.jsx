@@ -18,8 +18,6 @@ import InvitePage from "./pages/InvitePage";
 const App = () => {
   const { currentUser } = useAuth();
 
-  console.log("currentUser-->", currentUser);
-
   return (
     <Routes>
       <Route element={<AppLayout />}>
@@ -82,7 +80,7 @@ const App = () => {
         <Route
           path="/settings"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requireOwner>
               <Settings />
             </ProtectedRoute>
           }

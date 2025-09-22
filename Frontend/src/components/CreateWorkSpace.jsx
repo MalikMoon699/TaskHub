@@ -21,7 +21,7 @@ const CreateWorkSpace = ({ onClose }) => {
     "Yellow",
     "Purple",
     "Orange",
-    "Green",
+    "#44da44",
     "DarkBlue",
   ];
 

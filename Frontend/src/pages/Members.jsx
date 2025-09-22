@@ -65,9 +65,15 @@ const Members = () => {
     fetchMembers();
   }, [selectedWorkSpace]);
 
-  const filteredMembers = members.filter((member) =>
-    member.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredMembers = members
+    .filter((member) =>
+      member.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (a._id === workspaceData?.createdBy) return -1;
+      if (b._id === workspaceData?.createdBy) return 1;
+      return 0;
+    });
 
   const handleRemoveMember = async (memberId) => {
     if (!selectedWorkSpace) return;
@@ -107,13 +113,15 @@ const Members = () => {
     <div className="members-container">
       <div className="members-header">
         <h3 className="members-header-title">Workspace Members</h3>
-        <button
-          onClick={() => setIsInvite(true)}
-          className="members-header-btn"
-        >
-          <CirclePlus size={18} />
-          Invite
-        </button>
+        {workspaceData?.createdBy === currentUser?._id && (
+          <button
+            onClick={() => setIsInvite(true)}
+            className="members-header-btn"
+          >
+            <CirclePlus size={18} />
+            Invite
+          </button>
+        )}
       </div>
 
       <input

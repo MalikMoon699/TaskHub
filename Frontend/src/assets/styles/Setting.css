@@ -1,0 +1,138 @@
+.settings-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  background: #fff;
+}
+
+.settings-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background: #fafafa;
+}
+
+.settings-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.settings-subheading {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.settings-section-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settings-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.settings-color-picker {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.settings-color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.settings-color-option.active {
+  border: 2px solid #2196f3;
+}
+
+.settings-save-btn {
+  align-self: flex-start;
+  background: #2196f3;
+  color: white;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.settings-save-btn:hover {
+  background: #1976d2;
+}
+
+.settings-transfer-btn {
+  background: #e0e0e0;
+  color: #333;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-transfer-btn:hover {
+  background: #bdbdbd;
+}
+
+.settings-danger-zone {
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fff5f5;
+}
+
+.settings-delete-btn {
+  background: rgb(255, 32, 32);
+  color: white;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-delete-btn:hover {
+  background: #c62828;
+}
+
+.transfer-members {
+  display: flex;
+  align-items: center;
+  padding: 7px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.members-transfer-active {
+  background-color: #1976d230;
+  border: 1px solid #1976d2;
+  color: black;
+}
+
+.members-transfer-active > .members-info > h4 {
+  color: black !important;
+}
+.members-transfer-active > .members-info > p {
+  color: black !important;
+}

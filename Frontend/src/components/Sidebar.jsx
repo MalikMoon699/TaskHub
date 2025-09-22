@@ -9,13 +9,13 @@ import {
   UsersRound,
   Wrench,
 } from "lucide-react";
-import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 
-const Sidebar = () => {
-  const { logout } = useAuth();
+const Sidebar = ({ workspaceData }) => {
+  const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
+
   return (
     <div className="sidebar-container flex align-item-center justify-content-space ">
       <div>
@@ -111,19 +111,21 @@ const Sidebar = () => {
             </span>
             <h3 className="sidebar-item-text">Achived</h3>
           </div>
-          <div
-            onClick={() => {
-              navigate("/settings");
-            }}
-            className={`sidebar-item flex align-items-center justify-content-start ${
-              location.pathname === "/settings" ? "active" : ""
-            }`}
-          >
-            <span className="sidebar-item-icon">
-              <Settings size={18} />
-            </span>
-            <h3 className="sidebar-item-text">Settings</h3>
-          </div>
+          {workspaceData?.createdBy === currentUser?._id && (
+            <div
+              onClick={() => {
+                navigate("/settings");
+              }}
+              className={`sidebar-item flex align-items-center justify-content-start ${
+                location.pathname === "/settings" ? "active" : ""
+              }`}
+            >
+              <span className="sidebar-item-icon">
+                <Settings size={18} />
+              </span>
+              <h3 className="sidebar-item-text">Settings</h3>
+            </div>
+          )}
         </div>
       </div>
       <div

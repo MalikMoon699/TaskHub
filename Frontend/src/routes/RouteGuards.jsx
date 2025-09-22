@@ -1,17 +1,23 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useOutletContext } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Loader from "../components/Loader";
 
-export const ProtectedRoute = ({ children, allowWithoutWorkspace = false }) => {
+export const ProtectedRoute = ({
+  children,
+  allowWithoutWorkspace = false,
+  requireOwner = false,
+}) => {
   const { authAllow, loading, currentUser } = useAuth();
+  const { workspaceData } = useOutletContext() || {};
 
-  if (loading) return (
-    <Loader
-      loading={true}
-      size="50"
-      style={{ height: "85vh", width: "100%" }}
-    />
-  );
+  if (loading)
+    return (
+      <Loader
+        loading={true}
+        size="50"
+        style={{ height: "85vh", width: "100%" }}
+      />
+    );
 
   if (!authAllow) return <Navigate to="/login" replace />;
 
@@ -22,6 +28,10 @@ export const ProtectedRoute = ({ children, allowWithoutWorkspace = false }) => {
     return <Navigate to="/workspace" replace />;
   }
 
+  if (requireOwner && workspaceData?.createdBy !== currentUser?._id) {
+    return <Navigate to="/" replace />;
+  }
+
   return children;
 };
 
@@ -29,7 +39,14 @@ export const PublicRoute = ({ children }) => {
   const { authAllow, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Loader
+        loading={true}
+        size="50"
+        style={{ height: "85vh", width: "100%" }}
+      />
+    );
 
   if (authAllow && location.pathname.startsWith("/invite/")) {
     return children;

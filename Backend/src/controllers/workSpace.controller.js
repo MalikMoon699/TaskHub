@@ -225,7 +225,6 @@ export const declineWorkspaceInvite = async (req, res) => {
   }
 };
 
-
 export const removeMemberFromWorkspace = async (req, res) => {
   try {
     const { workspaceId, memberId } = req.params;
@@ -253,6 +252,76 @@ export const removeMemberFromWorkspace = async (req, res) => {
     res.json({ message: "Member removed successfully", workspace });
   } catch (error) {
     console.error("Error removing member:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const updateWorkspace = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const { name, discription, workspaceColor } = req.body;
+
+    const workspace = await WorkSpaces.findById(workspaceId);
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    if (name) workspace.name = name;
+    if (discription !== undefined) workspace.discription = discription;
+    if (workspaceColor) workspace.workspaceColor = workspaceColor;
+
+    await workspace.save();
+
+    res.json({ message: "Workspace updated successfully", workspace });
+  } catch (error) {
+    console.error("Error updating workspace:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const transferWorkspaceOwnership = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const { newOwnerId } = req.body;
+
+    const workspace = await WorkSpaces.findById(workspaceId);
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    if (!workspace.members.includes(newOwnerId)) {
+      return res.status(400).json({ message: "New owner must be a member" });
+    }
+
+    workspace.createdBy = newOwnerId;
+    await workspace.save();
+
+    res.json({ message: "Workspace ownership transferred", workspace });
+  } catch (error) {
+    console.error("Error transferring workspace:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const deleteWorkspace = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+
+    const workspace = await WorkSpaces.findById(workspaceId);
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    await WorkSpaces.findByIdAndDelete(workspaceId);
+
+    await User.updateMany(
+      { workSpaces: workspaceId },
+      { $pull: { workSpaces: workspaceId } }
+    );
+
+    res.json({ message: "Workspace deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting workspace:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

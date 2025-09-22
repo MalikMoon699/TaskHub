@@ -5,6 +5,7 @@ import {
   login,
   googleLogin,
   getUserData,
+  updateUser,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
@@ -14,5 +15,6 @@ router.post("/signup", signUp);
 router.post("/login", login);
 router.post("/google-login", googleLogin);
 router.get("/user", verifyToken, getUserData);
+router.put("/:userId", updateUser);
 
 export default router;

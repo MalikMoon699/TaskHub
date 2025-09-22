@@ -83,7 +83,11 @@ const Sidebar = ({ workspaceData }) => {
             <span className="sidebar-item-icon">
               <ListCheck size={18} />
             </span>
-            <h3 className="sidebar-item-text">My Tasks</h3>
+            <h3 className="sidebar-item-text">
+              {workspaceData?.createdBy === currentUser?._id
+                ? "Tasks"
+                : "My Tasks"}
+            </h3>
           </div>
           <div
             onClick={() => {

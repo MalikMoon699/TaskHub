@@ -54,29 +54,29 @@ export const createProject = async (req, res) => {
 };
 
 
-export const getprojects = async (req, res) => {
+export const getProjectsByWorkspace = async (req, res) => {
   try {
     const { workspaceId } = req.params;
+    const { userId } = req.query;
 
-    if (!workspaceId) {
-      return res.status(400).json({ message: "Workspace ID is required!" });
-    }
-
-  const workspace = await WorkSpaces.findById(workspaceId).populate({
-    path: "projects",
-    populate: { path: "members", select: "name email" },
-  });
-
+    const workspace = await WorkSpaces.findById(workspaceId);
     if (!workspace) {
-      return res.status(404).json({ message: "Workspace not found!" });
+      return res.status(404).json({ message: "Workspace not found" });
     }
 
-    res.status(200).json({
-      message: "Projects fetched successfully",
-      projects: workspace.projects,
-    });
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    let projects = [];
+    if (workspace.createdBy.toString() === userId) {
+      projects = await Project.find({ workSpaces: workspaceId });
+    } else {
+      projects = await Project.find({
+        workSpaces: workspaceId,
+        members: userId,
+      });
+    }
+
+    res.status(200).json({ projects });
+  } catch (err) {
+    console.error("Error fetching projects:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

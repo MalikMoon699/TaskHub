@@ -5,7 +5,6 @@ import { transporter } from "../config/mailer.js";
 import WorkSpaces from "../models/workSpace.model.js";
 import User from "../models/user.model.js";
 
-// Create workspace
 export const createWorkSpace = async (req, res) => {
   try {
     const { name, discription, workspaceColor, userId } = req.body;
@@ -38,7 +37,6 @@ export const createWorkSpace = async (req, res) => {
   }
 };
 
-// Get user’s workspaces
 export const getUserWorkSpaces = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -56,7 +54,6 @@ export const getUserWorkSpaces = async (req, res) => {
   }
 };
 
-// Get single workspace by ID
 export const getWorkspaceById = async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -78,7 +75,6 @@ export const getWorkspaceById = async (req, res) => {
   }
 };
 
-// Get workspace members
 export const getWorkspaceMembers = async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -100,7 +96,6 @@ export const getWorkspaceMembers = async (req, res) => {
   }
 };
 
-// Add member directly
 export const addMemberToWorkspace = async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -128,7 +123,6 @@ export const addMemberToWorkspace = async (req, res) => {
   }
 };
 
-// Send invite email
 export const sendWorkspaceInvite = async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -183,7 +177,6 @@ export const sendWorkspaceInvite = async (req, res) => {
   }
 };
 
-// Accept invite
 export const acceptWorkspaceInvite = async (req, res) => {
   try {
     const { token } = req.params;
@@ -213,7 +206,6 @@ export const acceptWorkspaceInvite = async (req, res) => {
   }
 };
 
-// Decline invite
 export const declineWorkspaceInvite = async (req, res) => {
   try {
     const { token } = req.params;
@@ -230,5 +222,37 @@ export const declineWorkspaceInvite = async (req, res) => {
   } catch (err) {
     console.error("Error declining invite:", err);
     res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
+export const removeMemberFromWorkspace = async (req, res) => {
+  try {
+    const { workspaceId, memberId } = req.params;
+
+    const workspace = await WorkSpaces.findById(workspaceId);
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    if (workspace.createdBy.toString() === memberId) {
+      return res
+        .status(400)
+        .json({ message: "Owner cannot be removed from workspace" });
+    }
+
+    workspace.members = workspace.members.filter(
+      (id) => id.toString() !== memberId
+    );
+    await workspace.save();
+
+    await User.findByIdAndUpdate(memberId, {
+      $pull: { workSpaces: workspaceId },
+    });
+
+    res.json({ message: "Member removed successfully", workspace });
+  } catch (error) {
+    console.error("Error removing member:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

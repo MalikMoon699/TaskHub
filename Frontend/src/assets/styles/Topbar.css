@@ -47,19 +47,20 @@
 .workspace-dropdown {
   position: absolute;
   background-color: white;
-  width: 120px;
+  width: 150px;
   box-shadow: 0px 0px 3px black;
   border-radius: 5px;
 }
 
 .workspace-dropdown-item {
-  max-width: 120px;
-  font-size: 11px;
+  max-width: 150px;
+  width: 100%;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 4px 4px;
+  padding: 6px 4px;
   border-bottom: 1px solid #dfdfdf;
   cursor: pointer;
 }
@@ -68,9 +69,18 @@
   background-color: #ebebeba8;
 }
 
+.workspace-dropdown-item-icon {
+  padding: 3px 7px;
+  color: white;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-right: 2.5px;
+}
+
 .workspace-dropdown-create {
-  max-width: 120px;
-  font-size: 11px;
+  max-width: 150px;
+  width: 100%;
+  font-size: 14px;
   font-weight: 300;
   white-space: nowrap;
   padding: 4px 3px;

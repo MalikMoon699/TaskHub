@@ -1,0 +1,147 @@
+.members-container {
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.members-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.members-header-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.members-header-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #2166fe;
+  color: white;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.members-header-btn:hover {
+  background: #1058f2;
+}
+
+.members-search {
+  width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.members-empty {
+  color: #888;
+}
+
+.members-list-header {
+  padding: 14px 16px;
+}
+
+.members-list-header-count {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.members-list {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.members-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.members-card:last-child {
+  border-bottom: none;
+}
+
+.members-avatar {
+  width: 40px;
+  height: 40px;
+  background: #e6e6e6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 12px;
+  overflow: hidden;
+}
+
+.members-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.members-info {
+  flex: 1;
+}
+
+.members-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.members-email {
+  font-size: 14px;
+  color: #666;
+}
+
+.members-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.members-role {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.members-role.owner {
+  background: #2166fe;
+  color: white;
+}
+
+.members-role.member {
+  background: #f0f0f0;
+  color: #444;
+}
+
+.members-workspace {
+  font-size: 12px;
+  background: #f8f8f8;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.members-remove-btn {
+  cursor: pointer;
+  background-color: #ff4d4d;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: white;
+}

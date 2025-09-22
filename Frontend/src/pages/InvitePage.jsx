@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 const InvitePage = () => {
   const { token } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
 
@@ -26,7 +27,7 @@ const InvitePage = () => {
         if (res.ok) {
           setStatus("success");
           setMessage(data.message || "Invite accepted!");
-          setTimeout(() => navigate("/workspaces"), 2000);
+          setTimeout(() => navigate("/workspaces"), 3000);
         } else {
           setStatus("error");
           setMessage(data.message || "Failed to accept invite");
@@ -41,13 +42,25 @@ const InvitePage = () => {
     acceptInvite();
   }, [token, navigate]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="invite-page">
-      <Loader
-        loading={true}
-        size="50"
-        style={{ height: "80vh", width: "100%" }}
-      />
+      {loading ? (
+        <Loader
+          loading={true}
+          size="50"
+          style={{ height: "80vh", width: "100%" }}
+        />
+      ) : (
+        <p className={status === "error" ? "error-message" : ""}>{message}</p>
+      )}
     </div>
   );
 };

@@ -62,7 +62,9 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/project/${selectedWorkSpace}`
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/project/${selectedWorkSpace}?userId=${currentUser._id}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -75,25 +77,23 @@ const Projects = () => {
     }
   };
 
- useEffect(() => {
-   if (!selectedWorkSpace) return;
+  useEffect(() => {
+    if (!selectedWorkSpace) return;
 
-   const fetchData = async () => {
-     setLoading(true);
-     try {
-       await Promise.all([fetchWorkspace(), fetchProjects()]);
-     } catch (error) {
-       console.error("Error fetching data:", error);
-     } finally {
-       setLoading(false);
-     }
-   };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([fetchWorkspace(), fetchProjects()]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-   fetchData();
- }, [selectedWorkSpace]);
+    fetchData();
+  }, [selectedWorkSpace]);
 
-  console.log("projects-->", projects);
-  console.log("workspaceData-->", workspaceData);
   return loading ? (
     <Loader loading={true} style={{ height: "85vh", width: "100%" }} />
   ) : (
@@ -102,15 +102,17 @@ const Projects = () => {
         <>
           <div className="local-header flex align-item-center justify-content-space">
             <h3 className="local-header-title">Projects</h3>
-            <button
-              onClick={() => {
-                setIsCreateProjects(true);
-              }}
-              className="local-header-btn"
-            >
-              <CirclePlus size={18} />
-              New Project
-            </button>
+            {workspaceData?.createdBy === currentUser?._id && (
+              <button
+                onClick={() => {
+                  setIsCreateProjects(true);
+                }}
+                className="local-header-btn"
+              >
+                <CirclePlus size={18} />
+                New Project
+              </button>
+            )}
           </div>
           <div
             className="flex align-item-center justify-content-start"

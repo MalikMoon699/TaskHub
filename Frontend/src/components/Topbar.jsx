@@ -44,6 +44,7 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
     return name.charAt(0).toUpperCase();
   };
 
+  console.log("Selected Workspace in Topbar:", workSpaces);
   return (
     <div className="topbar-container">
       <div className="topbar-left-side">
@@ -70,6 +71,12 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
                     setIsSelecter(false);
                   }}
                 >
+                  <span
+                    style={{ backgroundColor: item.workspaceColor }}
+                    className="workspace-dropdown-item-icon"
+                  >
+                    {getFirstLetter()}
+                  </span>
                   {item.name}
                 </div>
               ))}

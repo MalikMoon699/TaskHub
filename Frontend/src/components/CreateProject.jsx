@@ -8,7 +8,7 @@ const CreateProject = ({ onClose }) => {
   const { selectedWorkSpace } = useOutletContext();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [projectMembers,setProjectMembers]=useState([]);
+  const [projectMembers, setProjectMembers] = useState([]);
   const [projectMembersError, setProjectMembersError] = useState("");
   const [isSelectMembers, setIsSelectMembers] = useState(false);
   const [workspaceMembers, setWorkspaceMMembers] = useState([]);
@@ -23,25 +23,53 @@ const CreateProject = ({ onClose }) => {
 
   const validation = () => {
     let isValid = true;
+
+    // Reset errors
+    setTitleError("");
+    setStartDateError("");
+    setDueDateError("");
+    setProjectMembersError("");
+
     if (!title) {
       setTitleError("Project title is required!");
       isValid = false;
     }
+
     if (!startDate) {
       setStartDateError("Project start date is required!");
       isValid = false;
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // reset time
+      const start = new Date(startDate);
+
+      if (start < today) {
+        setStartDateError("Start date cannot be before today!");
+        isValid = false;
+      }
     }
+
     if (!dueDate) {
       setDueDateError("Project due date is required!");
       isValid = false;
+    } else {
+      const start = new Date(startDate);
+      const due = new Date(dueDate);
+
+      if (due <= start) {
+        setDueDateError("Due date must be after start date!");
+        isValid = false;
+      }
     }
-   if (projectMembers.length < 1) {
-     setProjectMembersError("You must add at least one member!");
-     isValid = false;
-   }
+
+    if (projectMembers.length < 1) {
+      setProjectMembersError("You must add at least one member!");
+      isValid = false;
+    }
 
     return isValid;
   };
+
 
   const handleCreate = async () => {
     if (!validation()) return;
@@ -74,30 +102,41 @@ const CreateProject = ({ onClose }) => {
     }
   };
 
-    useEffect(() => {
-      if (!selectedWorkSpace) return;
-  
-      const fetchMembers = async () => {
-        try {
-          const res = await fetch(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/workspaces/members/${selectedWorkSpace}`
-          );
-          const data = await res.json();
-  
-          if (res.ok) {
-            setWorkspaceMMembers(data.members || []);
-          } else {
-            console.error("Failed to fetch members:", data.message);
-          }
-        } catch (error) {
-          console.error("Error fetching members:", error);
+  useEffect(() => {
+    if (!selectedWorkSpace) return;
+
+    const fetchMembers = async () => {
+      try {
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/api/workspaces/members/${selectedWorkSpace}`
+        );
+        const data = await res.json();
+
+        if (res.ok) {
+          setWorkspaceMMembers(data.members || []);
+        } else {
+          console.error("Failed to fetch members:", data.message);
         }
-      };
-  
-      fetchMembers();
-    }, [selectedWorkSpace]);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
+
+    fetchMembers();
+  }, [selectedWorkSpace]);
+
+  const getFormattedDate = (date) => {
+    return date.toISOString().split("T")[0];
+  };
+
+  const today = new Date();
+  const todayStr = getFormattedDate(today);
+
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowStr = getFormattedDate(tomorrow);
 
   return (
     <div onClick={onClose} className="modal-overlay">
@@ -175,7 +214,7 @@ const CreateProject = ({ onClose }) => {
                 style={{ borderColor: startDateError ? "red" : "" }}
                 placeholder="Project title"
                 value={startDate}
-                // min={today}
+                min={todayStr}
                 onChange={(e) => {
                   setStartDate(e.target.value);
                   setStartDateError("");
@@ -196,7 +235,7 @@ const CreateProject = ({ onClose }) => {
                 placeholder="Project title"
                 style={{ borderColor: dueDateError ? "red" : "" }}
                 value={dueDate}
-                // min={startDate + 1}
+                min={tomorrowStr}
                 onChange={(e) => {
                   setDueDate(e.target.value);
                   setDueDateError("");
@@ -222,7 +261,11 @@ const CreateProject = ({ onClose }) => {
             >
               {projectMembers.length > 0 ? (
                 projectMembers.map((item, index) => (
-                  <p key={index}>{item.name},</p>
+                  <span key={index}>
+                    {item.name}
+
+                    {index !== projectMembers.length - 1 && ","}
+                  </span>
                 ))
               ) : (
                 <p style={{ color: "rgb(55 65 81 / 38%)" }}>

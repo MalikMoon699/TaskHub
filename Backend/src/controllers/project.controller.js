@@ -53,7 +53,6 @@ export const createProject = async (req, res) => {
   }
 };
 
-
 export const getProjectsByWorkspace = async (req, res) => {
   try {
     const { workspaceId } = req.params;
@@ -78,5 +77,54 @@ export const getProjectsByWorkspace = async (req, res) => {
   } catch (err) {
     console.error("Error fetching projects:", err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const UpdateProjectStatus = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { status, progress } = req.body;
+
+    console.log("Received progress:", progress);
+
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    project.status = status;
+    if (progress !== undefined) {
+      project.progress = progress;
+    }
+    await project.save();
+
+    res.status(200).json({ message: "Project status updated", project });
+  } catch (err) {
+    console.error("Error updating project status:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getProjectMembers = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const project = await Project.findById(projectId).populate(
+      "members",
+      "name email"
+    );
+
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    res.status(200).json({
+      message: "Members fetched successfully",
+      members: project.members,
+    });
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

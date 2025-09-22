@@ -40,7 +40,6 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.104);
 }
 
-/* Header section */
 .project-header {
   display: flex;
   justify-content: space-between;
@@ -61,21 +60,27 @@
 
 .project-description {
   font-size: 14px;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
   margin: 0;
 }
 
-/* Status badge */
 .project-status span {
-  background: #f3e8ff; /* light purple */
-  color: #7c3aed; /* purple-600 */
+  position: relative;
+  background: #f3e8ff;
+  color: #7c3aed;
   font-size: 12px;
   font-weight: 500;
   padding: 2px 8px;
-  border-radius: 9999px;
+  border-radius: 15px;
 }
 
-/* Progress bar */
+.project-status-update {
+  position: absolute;
+  right: 0px;
+  bottom: -52px;
+  width: 200px;
+}
+
 .project-progress {
   display: flex;
   align-items: center;
@@ -84,13 +89,13 @@
 
 .project-progress-label {
   font-size: 13px;
-  color: #374151; /* gray-700 */
+  color: #374151;
 }
 
 .project-progress-bar {
   flex: 1;
   height: 6px;
-  background: #e5e7eb; 
+  background: #e5e7eb;
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -98,7 +103,6 @@
 .project-progress-fill {
   height: 100%;
   background: #2166fe;
-  /* background: #93c5fd; */
   border-radius: 9999px;
   transition: width 0.3s ease;
 }
@@ -109,7 +113,6 @@
   font-weight: 500;
 }
 
-/* Footer */
 .project-footer {
   display: flex;
   justify-content: space-between;

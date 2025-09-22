@@ -1,19 +1,22 @@
 import { CalendarDays, CirclePlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import CreateProject from "../components/CreateProject";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import "../assets/styles/Project.css";
 import NoProject from "../components/NoProject";
 import { useAuth } from "../contexts/AuthContext";
 import Loader from "../components/Loader";
 
 const Projects = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [projects, setProjects] = useState([]);
   const { selectedWorkSpace } = useOutletContext();
   const [workspaceData, setWorkspaceData] = useState(null);
   const [isCreateProjects, setIsCreateProjects] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(null);
+  const [status, setStatus] = useState("");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -94,6 +97,28 @@ const Projects = () => {
     fetchData();
   }, [selectedWorkSpace]);
 
+  const updateProjectStatus = async (projectId, newStatus, progress) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/project/${projectId}/status`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus, progress }),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        fetchProjects();
+      } else {
+        console.error("Failed to update project status:", data.message);
+      }
+    } catch (err) {
+      console.error("Error updating project status:", err);
+    }
+  };
+
   return loading ? (
     <Loader loading={true} style={{ height: "85vh", width: "100%" }} />
   ) : (
@@ -119,7 +144,15 @@ const Projects = () => {
             style={{ gap: "10px" }}
           >
             {projects.map((project, index) => (
-              <div key={index} className="project-card">
+              <div
+                onClick={() => {
+                  navigate("/mytasks", {
+                    state: { selectedProject: project._id },
+                  });
+                }}
+                key={index}
+                className="project-card"
+              >
                 <div className="project-header">
                   <div className="project-info">
                     <h3 className="project-title">{project.title}</h3>
@@ -128,7 +161,50 @@ const Projects = () => {
                     </p>
                   </div>
                   <div className="project-status">
-                    <span>{project.status}</span>
+                    <span
+                      style={{
+                        cursor:
+                          workspaceData?.createdBy === currentUser?._id
+                            ? "pointer"
+                            : "",
+                      }}
+                      onClick={() => {
+                        if (workspaceData?.createdBy === currentUser?._id) {
+                          setIsUpdate(project._id);
+                        }
+                      }}
+                    >
+                      {project.status}
+                      {isUpdate === project._id && (
+                        <div className="project-status-update">
+                          <select
+                            className="form-selector"
+                            style={{ width: "100%" }}
+                            value={status || project.status}
+                            onChange={(e) => {
+                              const newStatus = e.target.value;
+                              const progress = calculateProgress(
+                                project.startDate,
+                                project.dueDate
+                              );
+                              setStatus(newStatus);
+                              updateProjectStatus(
+                                project._id,
+                                newStatus,
+                                progress
+                              );
+                              setIsUpdate(null);
+                            }}
+                          >
+                            <option value="Plaining">Planning</option>
+                            <option value="InProgress">In Progress</option>
+                            <option value="OnHold">On Hold</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        </div>
+                      )}
+                    </span>
                   </div>
                 </div>
 

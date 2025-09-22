@@ -7,6 +7,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import workspaces from "./routes/workSpace.routes.js";
 import project from "./routes/project.routes.js";
+import taskRoutes from "./routes/task.routes.js";
 
 import connectToDB from "./database/mongodb.js";
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/workspaces", workspaces);
 app.use("/api/project", project);
+app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Server API");

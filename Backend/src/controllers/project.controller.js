@@ -32,7 +32,7 @@ export const createProject = async (req, res) => {
       startDate,
       dueDate,
       workSpaces: [workspaceId],
-      members: members || [], // ✅ add members array
+      members: members || [],
     });
 
     await newProject.save();

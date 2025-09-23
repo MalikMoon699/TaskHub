@@ -166,7 +166,6 @@ const Settings = () => {
     }
   };
 
-  console.log(workspaceData);
 
   return loading ? (
     <Loader

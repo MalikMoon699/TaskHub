@@ -11,6 +11,7 @@ const projectSchema = new mongoose.Schema(
     dueDate: { type: String, required: true, trim: true },
     workSpaces: [{ type: mongoose.Schema.Types.ObjectId, ref: "WorkSpaces" }],
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
   },
   { timestamps: true }
 );

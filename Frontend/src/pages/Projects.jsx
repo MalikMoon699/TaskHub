@@ -168,7 +168,8 @@ const Projects = () => {
                             ? "pointer"
                             : "",
                       }}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (workspaceData?.createdBy === currentUser?._id) {
                           setIsUpdate(project._id);
                         }
@@ -227,7 +228,7 @@ const Projects = () => {
                 </div>
 
                 <div className="project-footer">
-                  <span className="project-tasks">0 Tasks</span>
+                  <span className="project-tasks">{project?.tasks?.length || 0} Tasks</span>
                   <span className="project-date">
                     <CalendarDays className="project-calendar-icon" />
                     {formatDate(project.dueDate)}

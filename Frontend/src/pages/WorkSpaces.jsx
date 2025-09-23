@@ -62,7 +62,11 @@ const WorkSpaces = () => {
   };
 
   return loading ? (
-    <Loader loading={true} size="50" style={{height:"85vh",width:"100%"}}/>
+    <Loader
+      loading={true}
+      size="50"
+      style={{ height: "85vh", width: "100%" }}
+    />
   ) : (
     <div>
       <div className="local-header flex align-item-center justify-content-space">
@@ -94,7 +98,10 @@ const WorkSpaces = () => {
               <div className="workspace-header">
                 <div
                   className="workspace-avatar"
-                  style={{ backgroundColor: item.workspaceColor }}
+                  style={{
+                    backgroundColor: item.workspaceColor,
+                    color: item.workspaceColor === "Yellow" ? "#000" : "",
+                  }}
                 >
                   {getFirstLetter(item.name)}
                 </div>

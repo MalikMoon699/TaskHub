@@ -20,7 +20,6 @@ export const createTask = async (req, res) => {
     if (!projectId)
       return res.status(400).json({ message: "Project ID is required!" });
 
-    // Ensure project exists
     const project = await Project.findById(projectId);
     if (!project) return res.status(404).json({ message: "Project not found" });
 
@@ -35,7 +34,6 @@ export const createTask = async (req, res) => {
 
     await newTask.save();
 
-    // push task id into project's tasks array (create field if not present)
     await Project.findByIdAndUpdate(
       projectId,
       { $push: { tasks: newTask._id } },

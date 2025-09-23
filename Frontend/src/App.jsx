@@ -70,7 +70,7 @@ const App = () => {
           }
         />
         <Route
-          path="/achived"
+          path="/achieved"
           element={
             <ProtectedRoute>
               <Achived />

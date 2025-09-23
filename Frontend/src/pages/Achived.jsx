@@ -11,6 +11,10 @@ const Achived = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
+   useEffect(() => {
+      document.title = "TaskHub | Achieved";
+    }, []);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {

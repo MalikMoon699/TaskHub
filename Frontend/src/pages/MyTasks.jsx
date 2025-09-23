@@ -25,6 +25,10 @@ const MyTasks = () => {
   const [isDetailModal, setIsDetailModal] = useState(false);
   const [isDetail, setIsDetail] = useState(null);
 
+   useEffect(() => {
+      document.title = "TaskHub | Tasks";
+    }, []);
+
   const fetchProjects = async () => {
     try {
       const res = await fetch(

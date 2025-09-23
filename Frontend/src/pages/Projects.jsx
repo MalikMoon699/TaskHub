@@ -18,6 +18,10 @@ const Projects = () => {
   const [isUpdate, setIsUpdate] = useState(null);
   const [status, setStatus] = useState("");
 
+   useEffect(() => {
+      document.title = "TaskHub | Projects";
+    }, []);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 

@@ -14,6 +14,10 @@ const WorkSpaces = () => {
   const [workSpaces, setWorkSpaces] = useState([]);
   const [loading, setLoading] = useState(false);
 
+   useEffect(() => {
+      document.title = "TaskHub | WorkSpaces";
+    }, []);
+
   useEffect(() => {
     if (!currentUser?._id) return;
 

@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import "../assets/styles/Dashboard.css";
 
 const Dashboard = () => {
   const { logout } = useAuth();
+  
   useEffect(() => {
     document.title = "TaskHub | Dashboard";
   }, []);

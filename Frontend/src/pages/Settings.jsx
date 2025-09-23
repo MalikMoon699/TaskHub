@@ -35,6 +35,10 @@ const Settings = () => {
     "DarkBlue",
   ];
 
+    useEffect(() => {
+        document.title = "TaskHub | Settings";
+      }, []);
+
   const fetchWorkspace = async () => {
     setLoading(true);
     try {

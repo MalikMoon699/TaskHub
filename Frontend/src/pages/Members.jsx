@@ -15,6 +15,11 @@ const Members = () => {
   const [isInvite, setIsInvite] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
+   useEffect(() => {
+      document.title = "TaskHub | Members";
+    }, []);
+
   const fetchWorkspace = async () => {
     try {
       const res = await fetch(

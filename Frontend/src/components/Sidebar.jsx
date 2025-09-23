@@ -104,16 +104,16 @@ const Sidebar = ({ workspaceData }) => {
           </div>
           <div
             onClick={() => {
-              navigate("/achived");
+              navigate("/achieved");
             }}
             className={`sidebar-item flex align-items-center justify-content-start ${
-              location.pathname === "/achived" ? "active" : ""
+              location.pathname === "/achieved" ? "active" : ""
             }`}
           >
             <span className="sidebar-item-icon">
               <BadgeCheck size={18} />
             </span>
-            <h3 className="sidebar-item-text">Achived</h3>
+            <h3 className="sidebar-item-text">Achieved</h3>
           </div>
           {workspaceData?.createdBy === currentUser?._id && (
             <div

@@ -9,6 +9,21 @@
   align-items: center;
 }
 
+.task-selected-project-info {
+  flex-direction: column;
+  margin: -4px 0px 20px 4px;
+}
+
+.task-selected-project-info > h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.task-selected-project-info > p {
+  font-size: 14px;
+  color: #555;
+}
+
 .task-header-title {
   font-size: 18px;
   font-weight: 600;
@@ -90,14 +105,14 @@
   border: 1px dashed #ccc;
   border-radius: 8px;
   padding: 12px;
-  min-height: 150px;
+  min-height: 128px;
 }
 
 .task-column-header {
   display: flex;
   justify-content: space-between;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   padding: 0px 5px;
 }
 
@@ -126,7 +141,7 @@
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 4px;
-    width: 100%;
+  width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -185,4 +200,77 @@
   color: #aaa;
   font-size: 14px;
   padding: 20px 0;
+}
+
+/* ----- Modal ----- */
+
+.task-modal-body {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: start;
+}
+
+.task-modal-title-desc-container {
+  border-bottom: 1.5px solid #2166fe;
+  border-radius: 6px;
+  padding: 3px 4px;
+}
+.task-modal-title-desc-container > h3 {
+  color: #2166fe;
+  font-size: 15px;
+  font-weight: 600;
+}
+.task-modal-title-desc-container > p {
+  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.task-modal-other-details {
+  width: 100%;
+}
+.task-modal-other-details > .task-modal-status-span > span {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.task-modal-other-details > span {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.task-modal-other-details >.task-modal-status-span > span > strong {
+  color: black;
+}
+
+.task-modal-other-details > .task-modal-status-span > span > p {
+  color: rgb(151, 151, 151);
+  font-weight: 400;
+}
+.task-modal-other-details > span > p {
+  color: rgb(151, 151, 151);
+  font-weight: 400;
+}
+
+.task-modal-status-span {
+  width: 100%;
+  background: #2166fe1a;
+  color: #2166fe;
+  border: 1px solid #2166fe;
+  border-radius: 4px;
+  padding: 5px 4px;
+  margin-bottom: 6px;
 }

@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import "../assets/styles/MyTasks.css";
 import CreateTasks from "../components/CreateTasks";
 import Loader from "../components/Loader";
+import TasksDetailModal from "../components/TasksDetailModal";
 
 const MyTasks = () => {
   const { currentUser } = useAuth();
@@ -21,6 +22,8 @@ const MyTasks = () => {
   const [activeTab, setActiveTab] = useState("alltasks");
   const [isCreateTask, setIsCreateTask] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDetailModal, setIsDetailModal] = useState(false);
+  const [isDetail, setIsDetail] = useState(null);
 
   const fetchProjects = async () => {
     try {
@@ -114,6 +117,7 @@ const MyTasks = () => {
   const inprogress = tasks.filter((t) => t.status === "inprogress");
   const done = tasks.filter((t) => t.status === "done");
 
+  const selectedProjectObj = projects.find((p) => p._id === selectedProject);
   return (
     <div className="task-container">
       <div className="local-header flex align-item-center justify-content-space">
@@ -147,6 +151,10 @@ const MyTasks = () => {
             </div>
           )}
         </div>
+      </div>
+      <div className="flex align-item-center justify-content-start task-selected-project-info">
+        <h3>{selectedProjectObj?.title}</h3>
+        <p>{selectedProjectObj?.discription}</p>
       </div>
       <div className="task-header flex justify-content-space">
         <div className="task-tabs">
@@ -226,6 +234,10 @@ const MyTasks = () => {
                   todo.map((task) => (
                     <div
                       key={task._id}
+                      onClick={() => {
+                        setIsDetail(task);
+                        setIsDetailModal(true);
+                      }}
                       className="task-card flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -302,6 +314,10 @@ const MyTasks = () => {
                   inprogress.map((task) => (
                     <div
                       key={task._id}
+                      onClick={() => {
+                        setIsDetail(task);
+                        setIsDetailModal(true);
+                      }}
                       className="task-card  flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -378,6 +394,10 @@ const MyTasks = () => {
                   done.map((task) => (
                     <div
                       key={task._id}
+                      onClick={() => {
+                        setIsDetail(task);
+                        setIsDetailModal(true);
+                      }}
                       className="task-card  flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -447,6 +467,15 @@ const MyTasks = () => {
             fetchTasks();
           }}
           selectedProject={selectedProject}
+        />
+      )}
+      {isDetailModal && (
+        <TasksDetailModal
+          details={isDetail}
+          onClose={() => {
+            setIsDetailModal(false);
+            setIsDetail(null);
+          }}
         />
       )}
     </div>

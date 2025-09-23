@@ -143,6 +143,14 @@
   display: flex;
 }
 
+.f-column {
+  flex-direction: column;
+}
+
+.f-row {
+  flex-direction: row;
+}
+
 .align-items-center {
   align-items: center;
 }

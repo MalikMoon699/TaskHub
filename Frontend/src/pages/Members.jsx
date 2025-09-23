@@ -170,7 +170,7 @@ const Members = () => {
                     ? "Member"
                     : "Owner"}
                 </span>
-                <span className="members-workspace">Test Workspace</span>
+                <span className="members-workspace">{workspaceData?.name}</span>
                 {member?._id !== workspaceData?.createdBy &&
                   currentUser?._id === workspaceData?.createdBy && (
                     <span

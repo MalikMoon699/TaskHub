@@ -14,7 +14,9 @@ const MyTasks = () => {
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [isSelecter, setIsSelecter] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(() => {
+    return localStorage.getItem("selectedProject") || null;
+  });
 
   const [activeTab, setActiveTab] = useState("alltasks");
   const [isCreateTask, setIsCreateTask] = useState(false);
@@ -49,7 +51,9 @@ const MyTasks = () => {
       const res = await fetch(
         `${
           import.meta.env.VITE_BACKEND_URL
-        }/api/tasks/${selectedProject}?userId=${currentUser._id}`
+        }/api/tasks/${selectedProject}?userId=${
+          currentUser._id
+        }&workspaceOwner=${workspaceData?.createdBy}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -76,8 +80,35 @@ const MyTasks = () => {
   }, [selectedWorkSpace]);
 
   useEffect(() => {
+    if (selectedProject) {
+      localStorage.setItem("selectedProject", selectedProject);
+    }
     fetchTasks();
   }, [selectedProject]);
+
+  const updateTaskStatus = async (taskId, newStatus) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/tasks/${taskId}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        fetchTasks();
+      } else {
+        console.error("Failed to update task:", data.message);
+      }
+    } catch (err) {
+      console.error("Error updating task status:", err);
+    }
+  };
 
   const todo = tasks.filter((t) => t.status === "todo");
   const inprogress = tasks.filter((t) => t.status === "inprogress");
@@ -182,7 +213,10 @@ const MyTasks = () => {
       ) : (
         <div className="task-board">
           {(activeTab === "alltasks" || activeTab === "todo") && (
-            <div className="task-column-outer-container">
+            <div
+              style={{ width: activeTab === "alltasks" ? "32%" : "100%" }}
+              className="task-column-outer-container"
+            >
               <div className="task-column-header">
                 <h3>To Do</h3>
                 <span>{todo.length}</span>
@@ -195,21 +229,53 @@ const MyTasks = () => {
                       className="task-card flex justify-content-center"
                     >
                       <div className="task-card-top-side">
-                        <div>
+                        <div className="task-card-info">
                           <h4 className="task-card-title">{task.title}</h4>
-                          <p className="task-card-disc">{task.discription}</p>
+                          <p
+                            style={
+                              activeTab !== "alltasks"
+                                ? {
+                                    textOverflow: "unset",
+                                    overflow: "visible",
+                                    whiteSpace: "unset",
+                                  }
+                                : {}
+                            }
+                            className="task-card-disc"
+                          >
+                            {task.discription}
+                          </p>
                         </div>
-                        <div>
-                          <button onClick={() => {}}>To Do</button>
+                        <div className="task-card-status">
+                          <button
+                            className="task-card-status-btn"
+                            style={{
+                              backgroundColor: "#f59e0b1a",
+                              color: "#b45309",
+                            }}
+                            onClick={() => {
+                              updateTaskStatus(task._id, "inprogress");
+                            }}
+                          >
+                            To Do
+                          </button>
                         </div>
                       </div>
                       <div className="task-card-bottom-side">
-                        <div>
-                          AssignedTo: <span>{task?.assignedTo?.length}</span>
+                        <div className="task-card-assigned">
+                          <strong>Assigned:</strong>{" "}
+                          <span className="task-card-assigned-count">
+                            {String(task?.assignedTo?.length || 0).padStart(
+                              2,
+                              "0"
+                            )}
+                          </span>
                         </div>
-                        <div>
-                          <Calendar />
-                          {new Date(task.dueDate).toLocaleDateString("en-US")}
+                        <div className="task-card-due-date">
+                          <Calendar size={12} className="task-card-calendar" />
+                          <span className="task-card-due-text">
+                            {new Date(task.dueDate).toLocaleDateString("en-US")}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -223,7 +289,10 @@ const MyTasks = () => {
             </div>
           )}
           {(activeTab === "alltasks" || activeTab === "inprogress") && (
-            <div className="task-column-outer-container">
+            <div
+              style={{ width: activeTab === "alltasks" ? "32%" : "100%" }}
+              className="task-column-outer-container"
+            >
               <div className="task-column-header">
                 <h3>In Progress</h3>
                 <span>{inprogress.length}</span>
@@ -231,9 +300,60 @@ const MyTasks = () => {
               <div className="task-column">
                 {inprogress.length > 0 ? (
                   inprogress.map((task) => (
-                    <div key={task._id} className="task-card">
-                      <h4 className="task-card-title">{task.title}</h4>
-                      <p className="task-card-desc">{task.description}</p>
+                    <div
+                      key={task._id}
+                      className="task-card  flex justify-content-center"
+                    >
+                      <div className="task-card-top-side">
+                        <div className="task-card-info">
+                          <h4 className="task-card-title">{task.title}</h4>
+                          <p
+                            style={
+                              activeTab !== "alltasks"
+                                ? {
+                                    textOverflow: "unset",
+                                    overflow: "visible",
+                                    whiteSpace: "unset",
+                                  }
+                                : {}
+                            }
+                            className="task-card-disc"
+                          >
+                            {task.discription}
+                          </p>
+                        </div>
+                        <div className="task-card-status">
+                          <button
+                            className="task-card-status-btn"
+                            style={{
+                              backgroundColor: "rgb(33 102 254 / 9%)",
+                              color: "rgb(33 102 254)",
+                            }}
+                            onClick={() => {
+                              updateTaskStatus(task._id, "done");
+                            }}
+                          >
+                            In Progress
+                          </button>
+                        </div>
+                      </div>
+                      <div className="task-card-bottom-side">
+                        <div className="task-card-assigned">
+                          <strong>Assigned:</strong>{" "}
+                          <span className="task-card-assigned-count">
+                            {String(task?.assignedTo?.length || 0).padStart(
+                              2,
+                              "0"
+                            )}
+                          </span>
+                        </div>
+                        <div className="task-card-due-date">
+                          <Calendar size={12} className="task-card-calendar" />
+                          <span className="task-card-due-text">
+                            {new Date(task.dueDate).toLocaleDateString("en-US")}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -245,7 +365,10 @@ const MyTasks = () => {
             </div>
           )}
           {(activeTab === "alltasks" || activeTab === "done") && (
-            <div className="task-column-outer-container">
+            <div
+              style={{ width: activeTab === "alltasks" ? "32%" : "100%" }}
+              className="task-column-outer-container"
+            >
               <div className="task-column-header">
                 <h3>Done</h3>
                 <span>{done.length}</span>
@@ -253,9 +376,58 @@ const MyTasks = () => {
               <div className="task-column">
                 {done.length > 0 ? (
                   done.map((task) => (
-                    <div key={task._id} className="task-card">
-                      <h4 className="task-card-title">{task.title}</h4>
-                      <p className="task-card-desc">{task.description}</p>
+                    <div
+                      key={task._id}
+                      className="task-card  flex justify-content-center"
+                    >
+                      <div className="task-card-top-side">
+                        <div className="task-card-info">
+                          <h4 className="task-card-title">{task.title}</h4>
+                          <p
+                            style={
+                              activeTab !== "alltasks"
+                                ? {
+                                    textOverflow: "unset",
+                                    overflow: "visible",
+                                    whiteSpace: "unset",
+                                  }
+                                : {}
+                            }
+                            className="task-card-disc"
+                          >
+                            {task.discription}
+                          </p>
+                        </div>
+                        <div className="task-card-status">
+                          <button
+                            className="task-card-status-btn"
+                            style={{
+                              backgroundColor: "rgba(9, 180, 126, 0.11)",
+                              color: "rgb(9 180 126 / 83%)",
+                              cursor: "text",
+                            }}
+                          >
+                            Done
+                          </button>
+                        </div>
+                      </div>
+                      <div className="task-card-bottom-side">
+                        <div className="task-card-assigned">
+                          <strong>Assigned:</strong>{" "}
+                          <span className="task-card-assigned-count">
+                            {String(task?.assignedTo?.length || 0).padStart(
+                              2,
+                              "0"
+                            )}
+                          </span>
+                        </div>
+                        <div className="task-card-due-date">
+                          <Calendar size={12} className="task-card-calendar" />
+                          <span className="task-card-due-text">
+                            {new Date(task.dueDate).toLocaleDateString("en-US")}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   ))
                 ) : (

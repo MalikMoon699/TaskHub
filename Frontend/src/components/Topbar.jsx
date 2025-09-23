@@ -29,9 +29,9 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
 
         if (res.ok) {
           setWorkSpaces(data.workSpaces || []);
-          if (data.workSpaces.length > 0) {
-            setSelectedWorkSpace(data.workSpaces[0]._id);
-          }
+          // if (data.workSpaces.length > 0) {
+          //   setSelectedWorkSpace(data.workSpaces[0]._id);
+          // }
         } else {
           console.error("Failed to fetch workspaces:", data.message);
         }

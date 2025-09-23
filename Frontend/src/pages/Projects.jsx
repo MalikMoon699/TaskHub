@@ -228,7 +228,9 @@ const Projects = () => {
                 </div>
 
                 <div className="project-footer">
-                  <span className="project-tasks">{project?.tasks?.length || 0} Tasks</span>
+                  <span className="project-tasks">
+                    {String(project?.tasks?.length || 0).padStart(2, "0")} Tasks
+                  </span>
                   <span className="project-date">
                     <CalendarDays className="project-calendar-icon" />
                     {formatDate(project.dueDate)}
@@ -247,6 +249,7 @@ const Projects = () => {
         <CreateProject
           onClose={() => {
             setIsCreateProjects(false);
+            fetchProjects();
           }}
         />
       )}

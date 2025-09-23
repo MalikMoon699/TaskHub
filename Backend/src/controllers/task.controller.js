@@ -53,14 +53,13 @@ export const createTask = async (req, res) => {
 export const getTasksByProject = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { userId } = req.query;
+    const { userId, workspaceOwner } = req.query;
 
     const project = await Project.findById(projectId);
     if (!project) return res.status(404).json({ message: "Project not found" });
 
     const query = { project: projectId };
-    if (userId) {
-      // return tasks where assignedTo includes userId
+    if (userId && workspaceOwner && userId !== workspaceOwner) {
       query.assignedTo = userId;
     }
 

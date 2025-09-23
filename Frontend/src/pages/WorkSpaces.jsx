@@ -85,7 +85,8 @@ const WorkSpaces = () => {
         {workSpaces.map((item, index) => (
           <div
             style={{
-              backgroundColor: selectedWorkSpace === item._id ? "#ccd6ed" : "",
+              backgroundColor:
+                selectedWorkSpace === item._id ? "rgb(33 102 254 / 8%)" : "",
             }}
             onClick={() => {
               setSelectedWorkSpace(item._id);
@@ -115,11 +116,11 @@ const WorkSpaces = () => {
               <div className="workspace-stats flex align-items-center justify-content-center">
                 <span className="workspace-members">
                   <Users className="icon" />
-                  {item.members.length}
+                  {String(item?.members?.length || 0).padStart(2, "0")}
                 </span>
                 <span className="workspace-projects">
                   <Presentation className="icon" />
-                  {item?.projects?.length}
+                  {String(item?.projects?.length || 0).padStart(2, "0")}
                 </span>
               </div>
             </div>

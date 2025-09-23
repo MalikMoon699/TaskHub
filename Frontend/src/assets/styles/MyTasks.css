@@ -83,7 +83,7 @@
 }
 
 .task-column {
-  /* min-height: 150px; */
+  min-height: 150px;
 }
 
 .task-empty-container {
@@ -104,14 +104,15 @@
 .task-card {
   background: white;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
   border: 1px solid #eee;
   border-radius: 8px;
-  padding: 10px;
+  padding: 20px 15px;
   margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
+
 .task-card-bottom-side,
 .task-card-top-side {
   display: flex;
@@ -121,12 +122,14 @@
   width: 100%;
 }
 
-
-
 .task-card-title {
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 4px;
+    width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .task-card-disc {
@@ -136,6 +139,45 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.task-card-info {
+  width: 80%;
+}
+
+.task-card-status {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: start;
+  height: -webkit-fill-available;
+}
+
+.task-card-status-btn {
+  padding: 1px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  white-space: nowrap;
+}
+
+.task-card-due-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #777;
+}
+
+.task-card-due-date > svg {
+  font-size: 0px;
+}
+
+.task-card-assigned {
+  font-size: 12px;
+  font-weight: 400;
+  color: #777777;
 }
 
 .task-empty {

@@ -119,7 +119,9 @@
 .task-card {
   background: white;
   flex-direction: column;
+  justify-content: space-between;
   gap: 20px;
+  min-height: 125px;
   width: 100%;
   border: 1px solid #eee;
   border-radius: 8px;

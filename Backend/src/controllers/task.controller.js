@@ -114,3 +114,29 @@ export const updateTaskStatus = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getTaskById = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+
+    if (!taskId) {
+      return res.status(400).json({ message: "Task ID is required" });
+    }
+
+    const task = await Task.findById(taskId)
+      .populate("assignedTo", "name email")
+      .populate("project", "title description");
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.status(200).json({
+      message: "Task fetched successfully",
+      task,
+    });
+  } catch (error) {
+    console.error("Error fetching task by ID:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

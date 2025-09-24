@@ -3,7 +3,6 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import { signUpSchema, loginSchema } from "../schemas/auth.schema.js";
-import { GOOGLE_CLIENT_ID } from "../config/env.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
@@ -61,7 +60,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleLogin = async (req, res) => {
   try {
-    const { token, type } = req.body;
+    const { token } = req.body;
     if (!token)
       return res.status(400).json({ message: "Google token required" });
 
@@ -76,15 +75,13 @@ export const googleLogin = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // create a new user
       user = new User({
         name: name || "Google User",
         email,
-        password: Math.random().toString(36).slice(-8), // dummy password, not used
+        password: Math.random().toString(36).slice(-8), 
       });
 
       if (picture) {
-        // optionally add a profile image field to your schema
         user.profileImg = picture;
       }
 

@@ -1,9 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../assets/styles/Dashboard.css";
-import { BookCheck, CircleCheckBig, Clock, ListTodo } from "lucide-react";
+import {
+  BookCheck,
+  CalendarDays,
+  CircleCheckBig,
+  Clock,
+  ListTodo,
+} from "lucide-react";
 import { useOutletContext } from "react-router-dom";
-// import { LineChart } from "@mui/x-charts/LineChart";
-
+import Chart from "../components/Chart";
 
 const Dashboard = () => {
   const { workspaceData } = useOutletContext();
@@ -37,6 +42,18 @@ const Dashboard = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const options = { month: "long", day: "numeric", year: "numeric" };
+    const formatted = date.toLocaleDateString("en-US", options);
+
+    const [monthDay, year] = formatted.split(",");
+    const [month, day] = monthDay.split(" ");
+
+    return `${month},${day} ${year.trim()}`;
+  };
+
   useEffect(() => {
     if (workspaceData) {
       fetchTasksData();
@@ -59,7 +76,6 @@ const Dashboard = () => {
   ).length;
   const toDoTasks = tasksData.filter((t) => t.status === "todo").length;
   const recentProjects = (workspaceData?.projects || []).slice(-5).reverse();
-
 
   return (
     <div>
@@ -115,30 +131,43 @@ const Dashboard = () => {
       </div>
       <div className="dashboard-body">
         <div className="dashboard-body-left-side">
-          {/* <LineChart
-            dataset={usUnemploymentRate}
-            xAxis={xAxis}
-            yAxis={yAxis}
-            series={series}
-            height={300}
-            grid={{ vertical: true, horizontal: true }}
-          /> */}
+          <Chart tasksData={tasksData} />
         </div>
         <div className="dashboard-body-right-side">
-          <div>Recent Projects</div>
-          {recentProjects.length > 0 ? (
-            <div>
-              {recentProjects.map((project) => (
-                <div key={project._id} className="recent-project-card">
-                  <h3>{project.title}</h3>
-                  <p>{project.discription}</p>
-                  <span>Status: {project.status}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="empty-message">recent projects not found</p>
-          )}
+          <div className="dashboard-projects-container">
+            <div className="dashboard-projects-header">Recent Projects</div>
+            {recentProjects.length > 0 ? (
+              <div className="dashboard-projects-inner-container">
+                {recentProjects.map((project) => (
+                  <div key={project._id} className="project-card">
+                    <div className="project-header">
+                      <div className="project-info">
+                        <h3 className="project-title">{project.title}</h3>
+                        <p className="project-description">
+                          {project.discription}
+                        </p>
+                      </div>
+                      <div className="project-status">
+                        <span>{project.status}</span>
+                      </div>
+                    </div>
+                    <div className="project-footer">
+                      <span className="project-tasks">
+                        {String(project?.tasks?.length || 0).padStart(2, "0")}{" "}
+                        Tasks
+                      </span>
+                      <span className="project-date">
+                        <CalendarDays className="project-calendar-icon" />
+                        {formatDate(project.dueDate)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="empty-message">recent projects not found</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -57,6 +57,10 @@ export const login = async (req, res) => {
 };
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+console.log(
+  "GOOGLE_CLIENT_ID in production from backend--->",
+  process.env.GOOGLE_CLIENT_ID
+);
 
 export const googleLogin = async (req, res) => {
   try {

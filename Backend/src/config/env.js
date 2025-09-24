@@ -12,4 +12,5 @@ export const {
   EMAIL_USER,
   EMAIL_PASS,
   FRONTEND_URL,
+  GOOGLE_CLIENT_ID,
 } = process.env;

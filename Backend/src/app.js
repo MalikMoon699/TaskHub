@@ -26,7 +26,11 @@ app.use("/api/project", project);
 app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the Server API");
+  // res.send("Welcome to the Server API");
+  res.send(
+    "GOOGLE_CLIENT_ID in production from backend--->",
+    process.env.GOOGLE_CLIENT_ID
+  );
 });
 
 app.listen(PORT, async () => {

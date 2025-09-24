@@ -3,6 +3,7 @@ import "../assets/styles/Auth.css";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "TaskHub | Login";
@@ -28,7 +30,7 @@ const Login = () => {
   const handleLogin = async () => {
     const isValid = validations();
     if (!isValid) return;
-
+    setLoading(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
@@ -53,6 +55,8 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +89,6 @@ const Login = () => {
   const handleGoogleError = () => {
     toast.error("Google Sign-In failed");
   };
-
 
   return (
     <div className="signup-page">
@@ -129,8 +132,21 @@ const Login = () => {
           </div>
         </div>
 
-        <button onClick={handleLogin} className="signup-button">
-          Sign In
+        <button
+          disabled={loading}
+          onClick={handleLogin}
+          className="signup-button"
+        >
+          {loading ? (
+            <Loader
+              loading={true}
+              color="white"
+              size="20"
+              style={{ height: "20px", width: "23px" }}
+            />
+          ) : (
+            "Sign In"
+          )}
         </button>
 
         <div className="or-container">

@@ -57,7 +57,7 @@ export const login = async (req, res) => {
   }
 };
 
-const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleLogin = async (req, res) => {
   try {
@@ -67,7 +67,7 @@ export const googleLogin = async (req, res) => {
 
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: GOOGLE_CLIENT_ID,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();

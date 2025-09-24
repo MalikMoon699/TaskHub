@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import "../assets/styles/Dashboard.css";
+import "../assets/styles/DashBoard.css";
 import {
   BookCheck,
   CalendarDays,

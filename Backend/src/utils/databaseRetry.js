@@ -1,12 +1,12 @@
 // utils/databaseRetry.js
 let retryCount = 0;
 const maxRetries = 3;
-const retryDelay = 5000; // 5 seconds
+const retryDelay = 5000;
 
 export const connectWithRetry = async (connectFunction) => {
   try {
     await connectFunction();
-    retryCount = 0; // Reset retry count on successful connection
+    retryCount = 0;
   } catch (error) {
     retryCount++;
     console.error(`MongoDB connection failed (attempt ${retryCount}):`, error);

@@ -119,12 +119,9 @@ export const googleLogin = async (req, res) => {
       user = new User({
         name: name || "Google User",
         email,
-        password: Math.random().toString(36).slice(-8),
+        authProvider: "google",
+        profileImg: picture || null,
       });
-
-      if (picture) {
-        user.profileImg = picture;
-      }
 
       await user.save();
     }

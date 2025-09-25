@@ -12,13 +12,14 @@ const connectToDB = async () => {
   try {
     const options = {
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 30000, 
+      serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
     };
 
     await mongoose.connect(DB_URI, options);
 
     console.log(`Connected to DB successfully in ${NODE_ENV} mode`);
+
     mongoose.connection.on("error", (err) => {
       console.error("MongoDB connection error:", err);
     });

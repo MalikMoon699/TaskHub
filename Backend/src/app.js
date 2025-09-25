@@ -22,21 +22,30 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
+
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("CORS blocked for origin:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+    ],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
 
+app.options("*", cors());
 app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
 
@@ -66,6 +75,16 @@ const startServer = async () => {
 
     app.get("/", (req, res) => {
       res.send("Welcome to the Server API");
+    });
+
+    app.use((error, req, res, next) => {
+      if (error.message === "Not allowed by CORS") {
+        return res.status(403).json({
+          success: false,
+          message: "CORS policy violation",
+        });
+      }
+      next(error);
     });
 
     app.listen(PORT, () => {

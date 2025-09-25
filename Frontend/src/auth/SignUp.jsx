@@ -66,30 +66,40 @@ const SignUp = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/google-login`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
           body: JSON.stringify({
             token: credentialResponse.credential,
           }),
         }
       );
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Google login failed");
+      }
+
       const data = await response.json();
+
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        toast.success("Google signup successful!");
-        navigate("/");
-      } else {
-        toast.error(data.message || "Google signup failed");
+
+        // Use window.location.href for better redirect
+        window.location.href = "/";
+        toast.success("Google login successful!");
       }
     } catch (err) {
-      toast.error("Google signup error: " + err.message);
+      console.error("Google login error:", err);
+      toast.error(err.message || "Google login failed");
     }
   };
 

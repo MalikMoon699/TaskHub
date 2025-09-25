@@ -11,6 +11,8 @@ import taskRoutes from "./routes/task.routes.js";
 
 import connectToDB from "./database/mongodb.js";
 
+connectToDB();
+
 const app = express();
 
 const allowedOrigins = [

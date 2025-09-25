@@ -4,11 +4,9 @@ import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, unique: true, required: true },
-    password: { type: String },
-    profileImg: { type: String },
-    authProvider: { type: String, enum: ["local", "google"], default: "local" },
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true, minlength: 8 },
     workSpaces: [{ type: mongoose.Schema.Types.ObjectId, ref: "WorkSpaces" }],
   },
   { timestamps: true }

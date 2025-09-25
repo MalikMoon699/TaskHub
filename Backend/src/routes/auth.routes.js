@@ -1,4 +1,4 @@
-// routes/auth.routes.js
+// src/routes/auth.routes.js
 import express from "express";
 import {
   signUp,
@@ -8,11 +8,8 @@ import {
   updateUser,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
-import { checkDBConnection } from "../middlewares/db.middleware.js";
 
 const router = express.Router();
-
-router.use(checkDBConnection);
 
 router.post("/signup", signUp);
 router.post("/login", login);

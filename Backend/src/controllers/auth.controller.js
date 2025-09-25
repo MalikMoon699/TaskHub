@@ -1,13 +1,21 @@
-// src/controllers/auth.controller.js
+// controllers/auth.controller.js
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import { signUpSchema, loginSchema } from "../schemas/auth.schema.js";
+import mongoose from "mongoose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 export const signUp = async (req, res) => {
   try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        message: "Database connection not ready. Please try again.",
+      });
+    }
+
     const parsed = signUpSchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.errors });
@@ -23,15 +31,35 @@ export const signUp = async (req, res) => {
     const user = new User({ name, email, password });
     await user.save();
 
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({
+      message: "User created successfully",
+      user: { id: user._id, name: user.name, email: user.email },
+    });
   } catch (error) {
     console.error("signUp error:", error);
+
+    if (
+      error.name === "MongoNetworkError" ||
+      error.name === "MongoTimeoutError"
+    ) {
+      return res
+        .status(503)
+        .json({ message: "Database connection issue. Please try again." });
+    }
+
     res.status(500).json({ message: error.message });
   }
 };
 
 export const login = async (req, res) => {
   try {
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        message: "Database connection not ready. Please try again.",
+      });
+    }
+
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
       return res.status(400).json({ errors: parsed.error.errors });
@@ -49,14 +77,28 @@ export const login = async (req, res) => {
     res.json({
       message: "Login successful",
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        workSpaces: user.workSpaces || [],
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
+
+    if (
+      error.name === "MongoNetworkError" ||
+      error.name === "MongoTimeoutError"
+    ) {
+      return res
+        .status(503)
+        .json({ message: "Database connection issue. Please try again." });
+    }
+
     res.status(500).json({ message: error.message });
   }
 };
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleLogin = async (req, res) => {
@@ -79,7 +121,7 @@ export const googleLogin = async (req, res) => {
       user = new User({
         name: name || "Google User",
         email,
-        password: Math.random().toString(36).slice(-8), 
+        password: Math.random().toString(36).slice(-8),
       });
 
       if (picture) {

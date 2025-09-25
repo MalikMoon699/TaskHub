@@ -10,19 +10,15 @@ if (!DB_URI) {
 
 const connectToDB = async () => {
   try {
-    // Remove bufferCommands: false to allow buffering
     const options = {
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
+      serverSelectionTimeoutMS: 30000, 
       socketTimeoutMS: 45000,
-      // Remove bufferCommands: false to allow queries to buffer while connecting
     };
 
     await mongoose.connect(DB_URI, options);
 
     console.log(`Connected to DB successfully in ${NODE_ENV} mode`);
-
-    // Connection event handlers
     mongoose.connection.on("error", (err) => {
       console.error("MongoDB connection error:", err);
     });

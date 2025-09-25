@@ -45,7 +45,6 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 
-// Health check route (no DB dependency)
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
@@ -54,14 +53,12 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Initialize app with async connection
 const startServer = async () => {
   try {
     console.log("Connecting to MongoDB...");
     await connectToDB();
     console.log("MongoDB connected successfully");
 
-    // Only mount routes AFTER database connection is established
     app.use("/api/auth", authRoutes);
     app.use("/api/workspaces", workspaces);
     app.use("/api/project", project);
@@ -80,7 +77,6 @@ const startServer = async () => {
   }
 };
 
-// Start the server
 startServer();
 
 export default app;

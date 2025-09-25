@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 export const signUp = async (req, res) => {
   try {
-    // Check if MongoDB is connected
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({
         message: "Database connection not ready. Please try again.",
@@ -53,7 +52,6 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    // Check if MongoDB is connected
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({
         message: "Database connection not ready. Please try again.",

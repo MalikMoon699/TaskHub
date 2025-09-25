@@ -134,6 +134,7 @@ const WorkSpaces = () => {
       </div>
       {isCreateWorkSpace && (
         <CreateWorkSpace
+          fetchWorkSpaces={fetchWorkSpaces()}
           onClose={() => {
             setIsCreateWorkSpace(false);
           }}

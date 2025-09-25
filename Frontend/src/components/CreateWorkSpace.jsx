@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import Loader from "./Loader";
 
-const CreateWorkSpace = ({ onClose }) => {
+const CreateWorkSpace = ({ onClose,fetchWorkSpaces }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState("Red");
@@ -53,6 +53,7 @@ const CreateWorkSpace = ({ onClose }) => {
       toast.success("Workspace created successfully!");
       navigate("/workspaces");
       onClose();
+      fetchWorkSpaces()
     } catch (error) {
       console.error(error);
     } finally {

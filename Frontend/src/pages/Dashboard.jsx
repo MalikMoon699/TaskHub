@@ -165,7 +165,9 @@ const Dashboard = () => {
                 ))}
               </div>
             ) : (
-              <p className="empty-message">recent projects not found</p>
+              <p className="empty-message-dashboard">
+                recent projects not found
+              </p>
             )}
           </div>
         </div>
@@ -175,3 +177,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -18,8 +18,6 @@ const Sidebar = ({ workspaceData, isSideBar, toggleMenuOpen }) => {
   const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
 
-  console.log("isSideBar-->", isSideBar);
-
   return (
     <div
       className={`sidebar-container flex align-item-center justify-content-space ${isSideBar ? "sidebar-open":""}`}

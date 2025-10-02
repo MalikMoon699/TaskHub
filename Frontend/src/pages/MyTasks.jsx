@@ -269,7 +269,8 @@ const MyTasks = () => {
                               backgroundColor: "#f59e0b1a",
                               color: "#b45309",
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation()
                               updateTaskStatus(task._id, "inprogress");
                             }}
                           >
@@ -349,7 +350,8 @@ const MyTasks = () => {
                               backgroundColor: "rgb(33 102 254 / 9%)",
                               color: "rgb(33 102 254)",
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               updateTaskStatus(task._id, "done");
                             }}
                           >

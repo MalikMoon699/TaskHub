@@ -7,12 +7,13 @@ import {
   Clock,
   ListTodo,
 } from "lucide-react";
+import Loader from "../components/Loader";
 import { useOutletContext } from "react-router-dom";
 import Chart from "../components/Chart";
 
 const Dashboard = () => {
   const { workspaceData } = useOutletContext();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tasksData, setTasksData] = useState([]);
 
   useEffect(() => {
@@ -131,7 +132,11 @@ const Dashboard = () => {
       </div>
       <div className="dashboard-body">
         <div className="dashboard-body-left-side">
-          <Chart tasksData={tasksData} />
+          {loading ? (
+            <Loader loading={true} size="70" style={{height:"450px", width:"100%"}}/>
+          ) : (
+            <Chart tasksData={tasksData} />
+          )}
         </div>
         <div className="dashboard-body-right-side">
           <div className="dashboard-projects-container">
@@ -177,4 +182,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

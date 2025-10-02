@@ -168,7 +168,7 @@ const Chart = ({ tasksData }) => {
               <Area
                 type="monotone"
                 dataKey="done"
-                fill="#2ecc707e"
+                fill="#2ecc702e"
                 stroke="#2ecc71"
                 dot={{
                   stroke: "#2ecc707e",

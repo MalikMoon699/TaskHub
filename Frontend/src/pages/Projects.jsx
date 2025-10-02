@@ -144,7 +144,7 @@ const Projects = () => {
             )}
           </div>
           <div
-            className="flex align-item-center justify-content-start"
+            className="flex wrap align-item-center justify-content-start"
             style={{ gap: "10px" }}
           >
             {projects.map((project, index) => (

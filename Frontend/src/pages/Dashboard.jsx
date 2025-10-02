@@ -77,7 +77,7 @@ const Dashboard = () => {
   ).length;
   const toDoTasks = tasksData.filter((t) => t.status === "todo").length;
   const recentProjects = (workspaceData?.projects || []).slice(-5).reverse();
-
+  
   return (
     <div>
       <div className="dashboard-tabs">
@@ -141,7 +141,7 @@ const Dashboard = () => {
         <div className="dashboard-body-right-side">
           <div className="dashboard-projects-container">
             <div className="dashboard-projects-header">Recent Projects</div>
-            {recentProjects.length < 0 ? (
+            {recentProjects.length > 0 ? (
               <div className="dashboard-projects-inner-container">
                 {recentProjects.map((project) => (
                   <div key={project._id} className="project-card">

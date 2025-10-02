@@ -1,5 +1,5 @@
 import { Calendar, ChevronDownIcon, CirclePlus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 import "../assets/styles/MyTasks.css";
@@ -25,9 +25,11 @@ const MyTasks = () => {
   const [isDetailModal, setIsDetailModal] = useState(false);
   const [isDetail, setIsDetail] = useState(null);
 
-   useEffect(() => {
-      document.title = "TaskHub | Tasks";
-    }, []);
+     const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    document.title = "TaskHub | Tasks";
+  }, []);
 
   const fetchProjects = async () => {
     try {
@@ -74,6 +76,17 @@ const MyTasks = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsSelecter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (location.state?.selectedProject) {
@@ -126,7 +139,7 @@ const MyTasks = () => {
     <div className="task-container">
       <div className="local-header flex align-item-center justify-content-space">
         <h3 className="local-header-title">Tasks</h3>
-        <div className="workspace-selector-container">
+        <div className="workspace-selector-container" ref={dropdownRef}>
           <div
             className="workspace-selector"
             style={{ width: "130px" }}
@@ -270,7 +283,7 @@ const MyTasks = () => {
                               color: "#b45309",
                             }}
                             onClick={(e) => {
-                              e.stopPropagation()
+                              e.stopPropagation();
                               updateTaskStatus(task._id, "inprogress");
                             }}
                           >

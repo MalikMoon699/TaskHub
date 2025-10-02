@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../assets/styles/Topbar.css";
 import { useAuth } from "../contexts/AuthContext";
 import { Bell, ChevronDown, X } from "lucide-react";
@@ -14,6 +14,19 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
   const [workSpaces, setWorkSpaces] = useState([]);
   const [isDetails, setIsDetails] = useState(false);
   const [loading, setLoading] = useState(false);
+
+   const dropdownRef = useRef(null);
+
+   useEffect(() => {
+     const handleClickOutside = (event) => {
+       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+         setIsSelecter(false);
+       }
+     };
+
+     document.addEventListener("mousedown", handleClickOutside);
+     return () => document.removeEventListener("mousedown", handleClickOutside);
+   }, []);
 
   useEffect(() => {
     if (!currentUser?._id) return;
@@ -89,7 +102,7 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
   return (
     <div className="topbar-container">
       <div className="topbar-left-side">
-        <div className="workspace-selector-container">
+        <div className="workspace-selector-container" ref={dropdownRef}>
           <div
             className="workspace-selector"
             onClick={() => setIsSelecter(!isSelecter)}

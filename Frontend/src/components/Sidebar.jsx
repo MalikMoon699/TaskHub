@@ -3,39 +3,52 @@ import {
   LayoutDashboard,
   ListCheck,
   LogOut,
+
   Presentation,
   Settings,
   Users,
   UsersRound,
   Wrench,
+  X,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 
-const Sidebar = ({ workspaceData }) => {
+const Sidebar = ({ workspaceData, isSideBar, toggleMenuOpen }) => {
   const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
 
+  console.log("isSideBar-->", isSideBar);
+
   return (
-    <div className="sidebar-container flex align-item-center justify-content-space ">
+    <div
+      className={`sidebar-container flex align-item-center justify-content-space ${isSideBar ? "sidebar-open":""}`}
+    >
       <div>
-        <div
-          onClick={() => {
-            navigate("/");
-          }}
-          className="sidebar-header flex align-items-center justify-content-start"
-        >
-          <Wrench
-            className="sidebar-logo"
-            size={20}
-            color="oklch(0.55 0.25 262.87)"
-          />
-          <span className="sidebar-title">TaskHub</span>
+        <div className="mobile-sidebar-header flex align-items-center justify-content-space">
+          <div
+            onClick={() => {
+              navigate("/");
+              toggleMenuOpen();
+            }}
+            className="sidebar-header flex align-items-center justify-content-start"
+          >
+            <Wrench
+              className="sidebar-logo"
+              size={20}
+              color="oklch(0.55 0.25 262.87)"
+            />
+            <span className="sidebar-title">TaskHub</span>
+          </div>
+          <button onClick={toggleMenuOpen}>
+            <X />
+          </button>
         </div>
         <div className="sidebar-body">
           <div
             onClick={() => {
               navigate("/");
+              toggleMenuOpen();
             }}
             className={`sidebar-item flex align-items-center justify-content-start ${
               location.pathname === "/" ? "active" : ""
@@ -52,6 +65,7 @@ const Sidebar = ({ workspaceData }) => {
             }`}
             onClick={() => {
               navigate("/workspaces");
+              toggleMenuOpen();
             }}
           >
             <span className="sidebar-item-icon">
@@ -65,6 +79,7 @@ const Sidebar = ({ workspaceData }) => {
             }`}
             onClick={() => {
               navigate("/projects");
+              toggleMenuOpen();
             }}
           >
             <span className="sidebar-item-icon">
@@ -78,6 +93,7 @@ const Sidebar = ({ workspaceData }) => {
             }`}
             onClick={() => {
               navigate("/mytasks");
+              toggleMenuOpen();
             }}
           >
             <span className="sidebar-item-icon">
@@ -92,6 +108,7 @@ const Sidebar = ({ workspaceData }) => {
           <div
             onClick={() => {
               navigate("/members");
+              toggleMenuOpen();
             }}
             className={`sidebar-item flex align-items-center justify-content-start ${
               location.pathname === "/members" ? "active" : ""
@@ -105,6 +122,7 @@ const Sidebar = ({ workspaceData }) => {
           <div
             onClick={() => {
               navigate("/achieved");
+              toggleMenuOpen();
             }}
             className={`sidebar-item flex align-items-center justify-content-start ${
               location.pathname === "/achieved" ? "active" : ""
@@ -119,6 +137,7 @@ const Sidebar = ({ workspaceData }) => {
             <div
               onClick={() => {
                 navigate("/settings");
+                toggleMenuOpen();
               }}
               className={`sidebar-item flex align-items-center justify-content-start ${
                 location.pathname === "/settings" ? "active" : ""

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "../assets/styles/DashBoard.css";
 import {
   BookCheck,
@@ -12,7 +12,7 @@ import { useOutletContext } from "react-router-dom";
 import Chart from "../components/Chart";
 
 const Dashboard = () => {
-  const { workspaceData } = useOutletContext();
+  const { workspaceData, selectedWorkSpace } = useOutletContext();
   const [loading, setLoading] = useState(true);
   const [tasksData, setTasksData] = useState([]);
 
@@ -20,12 +20,16 @@ const Dashboard = () => {
     document.title = "TaskHub | Dashboard";
   }, []);
 
-  const fetchTasksData = async () => {
-    if (!allTasks.length) return;
-    setLoading(true);
+  const fetchTasksData = useCallback(async (tasks) => {
+    if (!tasks.length) {
+      setTasksData([]);
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
     try {
-      const taskRequests = allTasks.map(async (taskId) => {
+      const taskRequests = tasks.map(async (taskId) => {
         const res = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/tasks/taskById/${taskId}`
         );
@@ -41,7 +45,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -55,16 +59,17 @@ const Dashboard = () => {
     return `${month},${day} ${year.trim()}`;
   };
 
-  useEffect(() => {
-    if (workspaceData) {
-      fetchTasksData();
-    }
-  }, [workspaceData]);
-
   const allTasks = useMemo(() => {
     if (!workspaceData?.projects) return [];
     return workspaceData.projects.flatMap((project) => project.tasks || []);
-  }, [workspaceData]);
+  }, [workspaceData, selectedWorkSpace]);
+
+useEffect(() => {
+  if (workspaceData) {
+    fetchTasksData(allTasks);
+  }
+}, [workspaceData, selectedWorkSpace, allTasks, fetchTasksData]);
+
 
   const totalProjects = workspaceData?.projects?.length || 0;
   const inProgressProjects = (workspaceData?.projects || []).filter(
@@ -77,7 +82,11 @@ const Dashboard = () => {
   ).length;
   const toDoTasks = tasksData.filter((t) => t.status === "todo").length;
   const recentProjects = (workspaceData?.projects || []).slice(-5).reverse();
-  
+
+  const dummyChartData = [{ _id: "68dd67c2708147305f398061" }];
+  const isTasksEmpty = !tasksData || tasksData.length === 0;
+  const chartData = isTasksEmpty ? dummyChartData : tasksData;
+
   return (
     <div>
       <div className="dashboard-tabs">
@@ -133,9 +142,13 @@ const Dashboard = () => {
       <div className="dashboard-body">
         <div className="dashboard-body-left-side">
           {loading ? (
-            <Loader loading={true} size="70" style={{height:"450px", width:"100%"}}/>
+            <Loader
+              loading={true}
+              size="70"
+              style={{ height: "450px", width: "100%" }}
+            />
           ) : (
-            <Chart tasksData={tasksData} />
+            <Chart tasksData={chartData} />
           )}
         </div>
         <div className="dashboard-body-right-side">

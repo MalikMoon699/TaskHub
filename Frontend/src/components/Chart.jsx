@@ -19,7 +19,7 @@ const Chart = ({ tasksData }) => {
     if (!tasksData || tasksData.length === 0) return [];
 
     const startOfWeek = moment
-      .min(tasksData.map((t) => moment(t.updatedAt)))
+      .min(tasksData?.map((t) => moment(t.updatedAt)))
       .startOf("isoWeek");
 
     const grouped = {};

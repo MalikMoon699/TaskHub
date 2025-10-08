@@ -25,7 +25,7 @@ const MyTasks = () => {
   const [isDetailModal, setIsDetailModal] = useState(false);
   const [isDetail, setIsDetail] = useState(null);
 
-     const dropdownRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     document.title = "TaskHub | Tasks";
@@ -135,6 +135,10 @@ const MyTasks = () => {
   const done = tasks.filter((t) => t.status === "done");
 
   const selectedProjectObj = projects.find((p) => p._id === selectedProject);
+
+  const haveProject = projects.find((p) => p._id === selectedProject)?.title
+    ? true
+    : false;
   return (
     <div className="task-container">
       <div className="local-header flex align-item-center justify-content-space">
@@ -223,9 +227,9 @@ const MyTasks = () => {
         ) : (
           <div className="task-status-summary">
             <h4>Status:</h4>
-            <span>{todo.length} To Do</span>
-            <span>{inprogress.length} In Progress</span>
-            <span>{done.length} Done</span>
+            <span>{haveProject ? todo.length : "0"} To Do</span>
+            <span>{haveProject ? inprogress.length : "0"} In Progress</span>
+            <span>{haveProject ? done.length : "0"} Done</span>
           </div>
         )}
       </div>
@@ -244,10 +248,10 @@ const MyTasks = () => {
             >
               <div className="task-column-header">
                 <h3>To Do</h3>
-                <span>{todo.length}</span>
+                <span>{haveProject ? todo.length : "0"}</span>
               </div>
               <div className="task-column">
-                {todo.length > 0 ? (
+                {todo.length > 0 && haveProject ? (
                   todo.map((task) => (
                     <div
                       key={task._id}
@@ -325,10 +329,10 @@ const MyTasks = () => {
             >
               <div className="task-column-header">
                 <h3>In Progress</h3>
-                <span>{inprogress.length}</span>
+                <span>{haveProject ? inprogress.length : "0"}</span>
               </div>
               <div className="task-column">
-                {inprogress.length > 0 ? (
+                {inprogress.length > 0 && haveProject ? (
                   inprogress.map((task) => (
                     <div
                       key={task._id}
@@ -406,10 +410,10 @@ const MyTasks = () => {
             >
               <div className="task-column-header">
                 <h3>Done</h3>
-                <span>{done.length}</span>
+                <span>{haveProject ? done.length : "0"}</span>
               </div>
               <div className="task-column">
-                {done.length > 0 ? (
+                {done.length > 0 && haveProject ? (
                   done.map((task) => (
                     <div
                       key={task._id}

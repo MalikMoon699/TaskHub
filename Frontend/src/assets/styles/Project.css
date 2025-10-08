@@ -20,6 +20,7 @@
   padding: 4px;
   width: 100%;
   border: 1px solid #00000017;
+  cursor: pointer;
 }
 
 .project-card {

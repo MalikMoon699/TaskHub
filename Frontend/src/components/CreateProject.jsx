@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate, useOutletContext } from "react-router";
@@ -20,6 +20,27 @@ const CreateProject = ({ onClose }) => {
   const [startDateError, setStartDateError] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [dueDateError, setDueDateError] = useState("");
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsSelectMembers(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    setStartDate(today.toISOString().split("T")[0]);
+    setDueDate(tomorrow.toISOString().split("T")[0]);
+  }, []);
 
   const validation = () => {
     let isValid = true;
@@ -69,7 +90,6 @@ const CreateProject = ({ onClose }) => {
 
     return isValid;
   };
-
 
   const handleCreate = async () => {
     if (!validation()) return;
@@ -127,10 +147,7 @@ const CreateProject = ({ onClose }) => {
     fetchMembers();
   }, [selectedWorkSpace]);
 
-  const getFormattedDate = (date) => {
-    return date.toISOString().split("T")[0];
-  };
-
+  const getFormattedDate = (date) => date.toISOString().split("T")[0];
   const today = new Date();
   const todayStr = getFormattedDate(today);
 
@@ -244,7 +261,7 @@ const CreateProject = ({ onClose }) => {
               {dueDateError && <p className="error-message">{dueDateError}</p>}
             </div>
           </div>
-          <div className="form-group">
+          <div className="form-group" ref={dropdownRef}>
             <label className="form-label" htmlFor="">
               Members
             </label>
@@ -277,33 +294,38 @@ const CreateProject = ({ onClose }) => {
                   onClick={(e) => e.stopPropagation()}
                   className="create-project-members-list"
                 >
-                  {workspaceMembers.map((member) => (
-                    <div
-                      key={member._id}
-                      className="create-project-member-item"
-                    >
-                      <input
-                        type="checkbox"
-                        className="create-project-member-checkbox"
-                        checked={projectMembers.some(
-                          (m) => m._id === member._id
-                        )}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setProjectMembers([...projectMembers, member]);
-                            setProjectMembersError("");
-                          } else {
-                            setProjectMembers(
-                              projectMembers.filter((m) => m._id !== member._id)
-                            );
-                          }
-                        }}
-                      />
-                      <p className="create-project-member-name">
-                        {member.name}
-                      </p>
-                    </div>
-                  ))}
+                  {workspaceMembers.map((member) => {
+                    const isSelected = projectMembers.some(
+                      (m) => m._id === member._id
+                    );
+                    return (
+                      <label
+                        key={member._id}
+                        className="create-project-member-item"
+                      >
+                        <input
+                          type="checkbox"
+                          className="create-project-member-checkbox"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setProjectMembers([...projectMembers, member]);
+                              setProjectMembersError("");
+                            } else {
+                              setProjectMembers(
+                                projectMembers.filter(
+                                  (m) => m._id !== member._id
+                                )
+                              );
+                            }
+                          }}
+                        />
+                        <p className="create-project-member-name">
+                          {member.name}
+                        </p>
+                      </label>
+                    );
+                  })}
                 </div>
               )}
             </div>

@@ -119,6 +119,12 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
               {workSpaces.map((item) => (
                 <div
                   key={item._id}
+                  style={{
+                    backgroundColor:
+                      item._id === selectedWorkSpace
+                        ? "rgb(0 80 255 / 17%)"
+                        : "",
+                  }}
                   className="workspace-dropdown-item"
                   onClick={() => {
                     setSelectedWorkSpace(item._id);

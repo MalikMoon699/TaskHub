@@ -251,9 +251,9 @@ const Projects = () => {
       )}
       {isCreateProjects && (
         <CreateProject
+          fetchProjects={fetchProjects}
           onClose={() => {
             setIsCreateProjects(false);
-            fetchProjects();
           }}
         />
       )}

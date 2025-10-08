@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate, useOutletContext } from "react-router";
 
-const CreateProject = ({ onClose }) => {
+const CreateProject = ({ onClose, fetchProjects }) => {
   const { selectedWorkSpace } = useOutletContext();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -115,6 +115,7 @@ const CreateProject = ({ onClose }) => {
       if (!response.ok) return alert(data.message);
 
       toast.success("Project created successfully!");
+      fetchProjects();
       onClose();
       navigate("/projects");
     } catch (error) {
@@ -229,12 +230,17 @@ const CreateProject = ({ onClose }) => {
                 className="form-input"
                 type="date"
                 style={{ borderColor: startDateError ? "red" : "" }}
-                placeholder="Project title"
                 value={startDate}
                 min={todayStr}
                 onChange={(e) => {
-                  setStartDate(e.target.value);
+                  const newStart = e.target.value;
+                  setStartDate(newStart);
                   setStartDateError("");
+                  if (dueDate && new Date(dueDate) <= new Date(newStart)) {
+                    const nextDay = new Date(newStart);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    setDueDate(nextDay.toISOString().split("T")[0]);
+                  }
                 }}
               />
               {startDateError && (
@@ -249,15 +255,15 @@ const CreateProject = ({ onClose }) => {
               <input
                 className="form-input"
                 type="date"
-                placeholder="Project title"
                 style={{ borderColor: dueDateError ? "red" : "" }}
                 value={dueDate}
-                min={tomorrowStr}
+                min={startDate || todayStr}
                 onChange={(e) => {
                   setDueDate(e.target.value);
                   setDueDateError("");
                 }}
               />
+
               {dueDateError && <p className="error-message">{dueDateError}</p>}
             </div>
           </div>

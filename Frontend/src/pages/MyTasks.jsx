@@ -18,14 +18,31 @@ const MyTasks = () => {
   const [selectedProject, setSelectedProject] = useState(() => {
     return localStorage.getItem("selectedProject") || null;
   });
+  const [editTask, setEditTask] = useState(null);
 
   const [activeTab, setActiveTab] = useState("alltasks");
   const [isCreateTask, setIsCreateTask] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDetailModal, setIsDetailModal] = useState(false);
   const [isDetail, setIsDetail] = useState(null);
+  const [contextMenu, setContextMenu] = useState(null);
 
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
+  
+  const handleRightClick = (e, task) => {
+    e.preventDefault();
+    setContextMenu({
+      x: e.pageX,
+      y: e.pageY,
+      task,
+    });
+  };
 
   useEffect(() => {
     document.title = "TaskHub | Tasks";
@@ -74,6 +91,24 @@ const MyTasks = () => {
       console.error("Error fetching tasks:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteTask = async (taskId) => {
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/tasks/${taskId}/delete`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        fetchTasks();
+      } else {
+        console.error("Failed to delete task:", data.message);
+      }
+    } catch (err) {
+      console.error("Error deleting task:", err);
     }
   };
 
@@ -259,6 +294,11 @@ const MyTasks = () => {
                         setIsDetail(task);
                         setIsDetailModal(true);
                       }}
+                      onContextMenu={(e) =>{
+                        if (workspaceData?.createdBy === currentUser?._id) {
+                          handleRightClick(e, task);
+                        }
+                      }}
                       className="task-card flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -340,6 +380,7 @@ const MyTasks = () => {
                         setIsDetail(task);
                         setIsDetailModal(true);
                       }}
+                      onContextMenu={(e) => handleRightClick(e, task)}
                       className="task-card  flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -421,6 +462,7 @@ const MyTasks = () => {
                         setIsDetail(task);
                         setIsDetailModal(true);
                       }}
+                      onContextMenu={(e) => handleRightClick(e, task)}
                       className="task-card  flex justify-content-center"
                     >
                       <div className="task-card-top-side">
@@ -483,13 +525,63 @@ const MyTasks = () => {
           )}
         </div>
       )}
+
+      {contextMenu && (
+        <div
+          className="context-menu"
+          style={{
+            top: contextMenu.y,
+            left: contextMenu.x,
+            position: "absolute",
+            zIndex: 1000,
+            background: "#fff",
+            borderRadius: "6px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            padding: "5px 0",
+            width: "120px",
+          }}
+        >
+          <p
+            className="context-item"
+            onClick={() => {
+              setEditTask(contextMenu.task);
+              setIsCreateTask(true);
+              setContextMenu(null);
+            }}
+            style={{
+              padding: "8px 12px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            Edit
+          </p>
+          <p
+            className="context-item"
+            onClick={() => {
+              deleteTask(contextMenu.task._id);
+              setContextMenu(null);
+            }}
+            style={{
+              padding: "8px 12px",
+              cursor: "pointer",
+              fontSize: "14px",
+              color: "red",
+            }}
+          >
+            Delete
+          </p>
+        </div>
+      )}
       {isCreateTask && (
         <CreateTasks
           onClose={() => {
             setIsCreateTask(false);
+            setEditTask(null);
             fetchTasks();
           }}
           selectedProject={selectedProject}
+          editData={editTask}
         />
       )}
       {isDetailModal && (

@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate, useOutletContext } from "react-router";
 
-const CreateProject = ({ onClose, fetchProjects }) => {
+const CreateProject = ({ onClose, fetchProjects, editData }) => {
   const { selectedWorkSpace } = useOutletContext();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -21,6 +21,23 @@ const CreateProject = ({ onClose, fetchProjects }) => {
   const [dueDate, setDueDate] = useState("");
   const [dueDateError, setDueDateError] = useState("");
   const dropdownRef = useRef(null);
+
+ useEffect(() => {
+   if (editData && workspaceMembers.length > 0) {
+     setTitle(editData.title || "");
+     setDiscription(editData.discription || "");
+     setStatus(editData.status || "Plaining");
+     setStartDate(editData.startDate?.split("T")[0] || "");
+     setDueDate(editData.dueDate?.split("T")[0] || "");
+
+     const mappedMembers = workspaceMembers.filter((member) =>
+       editData.members.includes(member._id)
+     );
+     setProjectMembers(mappedMembers);
+   }
+ }, [editData, workspaceMembers]);
+
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -91,37 +108,45 @@ const CreateProject = ({ onClose, fetchProjects }) => {
     return isValid;
   };
 
-  const handleCreate = async () => {
-    if (!validation()) return;
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/project`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title,
-            discription,
-            status,
-            startDate,
-            dueDate,
-            workspaceId: selectedWorkSpace,
-            members: projectMembers.map((m) => m._id),
-          }),
-        }
-      );
+const handleCreate = async () => {
+  if (!validation()) return;
 
-      const data = await response.json();
-      if (!response.ok) return alert(data.message);
+  try {
+    const url = editData
+      ? `${import.meta.env.VITE_BACKEND_URL}/api/project/${editData._id}/details`
+      : `${import.meta.env.VITE_BACKEND_URL}/api/project`;
 
-      toast.success("Project created successfully!");
-      fetchProjects();
-      onClose();
-      navigate("/projects");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const method = editData ? "PUT" : "POST";
+
+    const response = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title,
+        discription,
+        status,
+        startDate,
+        dueDate,
+        workspaceId: selectedWorkSpace,
+        members: projectMembers.map((m) => m._id),
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) return toast.error(data.message || "Failed");
+
+    toast.success(
+      editData
+        ? "Project updated successfully!"
+        : "Project created successfully!"
+    );
+    fetchProjects();
+    onClose();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   useEffect(() => {
     if (!selectedWorkSpace) return;
@@ -165,7 +190,9 @@ const CreateProject = ({ onClose, fetchProjects }) => {
         className="modal-content"
       >
         <div className="modal-header flex align-item-center justify-content-space">
-          <h3 className="modal-title">Create Project</h3>
+          <h3 className="modal-title">
+            {editData ? "Edit Project" : "Create Project"}
+          </h3>
           <button className="modal-close-btn" onClick={onClose}>
             <X size={15} color="#757575" />
           </button>
@@ -348,7 +375,7 @@ const CreateProject = ({ onClose, fetchProjects }) => {
               onClick={handleCreate}
               className="create-btn"
             >
-              Create project
+              {editData ? "Update Project" : "Create Project"}
             </button>
           </div>
         </div>

@@ -80,6 +80,91 @@ export const getProjectsByWorkspace = async (req, res) => {
   }
 };
 
+export const UpdateProjectDetails = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const {
+      title,
+      discription,
+      status,
+      startDate,
+      dueDate,
+      workspaceId,
+      members,
+      progress,
+    } = req.body;
+
+    // Fetch the project
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Update fields (only those provided)
+    if (title !== undefined) project.title = title;
+    if (discription !== undefined) project.discription = discription;
+    if (status !== undefined) project.status = status;
+    if (startDate !== undefined) project.startDate = startDate;
+    if (dueDate !== undefined) project.dueDate = dueDate;
+    if (progress !== undefined) project.progress = progress;
+    if (members !== undefined) project.members = members;
+
+    // Handle workspace reassignment (optional)
+    if (workspaceId && !project.workSpaces.includes(workspaceId)) {
+      // Remove project from old workspaces
+      await WorkSpaces.updateMany(
+        { projects: projectId },
+        { $pull: { projects: projectId } }
+      );
+
+      // Add to new workspace
+      await WorkSpaces.findByIdAndUpdate(workspaceId, {
+        $push: { projects: projectId },
+      });
+
+      project.workSpaces = [workspaceId];
+    }
+
+    await project.save();
+
+    res.status(200).json({
+      message: "Project details updated successfully",
+      project,
+    });
+  } catch (error) {
+    console.error("Error updating project details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const DeleteProjectDetails = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    // Remove project reference from all workspaces
+    await WorkSpaces.updateMany(
+      { projects: projectId },
+      { $pull: { projects: projectId } }
+    );
+
+    // Delete the project itself
+    await Project.findByIdAndDelete(projectId);
+
+    res.status(200).json({
+      message: "Project deleted successfully",
+      projectId,
+    });
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 export const UpdateProjectStatus = async (req, res) => {
   try {
     const { projectId } = req.params;

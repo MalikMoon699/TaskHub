@@ -1,22 +1,38 @@
 import { X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 import { useNavigate } from "react-router";
 
-const CreateTasks = ({ onClose, selectedProject }) => {
+const CreateTasks = ({ onClose, selectedProject, editData }) => {
   const navigate = useNavigate();
   const [projectMembers, setProjectMembers] = useState([]);
-  const [assignMembers, setAssignMembers] = useState([]);
-  const [projectMembersError, setProjectMembersError] = useState("");
   const [isSelectMembers, setIsSelectMembers] = useState(false);
-  const [title, setTitle] = useState("");
+  const [projectMembersError, setProjectMembersError] = useState("");
+  const [assignMembers, setAssignMembers] = useState(
+    editData?.assignedTo || []
+  );
+  const [title, setTitle] = useState(editData?.title || "");
   const [titleError, setTitleError] = useState("");
-  const [discription, setDiscription] = useState("");
-  const [status, setStatus] = useState("todo");
-  const [dueDate, setDueDate] = useState("");
+  const [discription, setDiscription] = useState(editData?.discription || "");
+  const [status, setStatus] = useState(editData?.status || "todo");
+  const [dueDate, setDueDate] = useState(
+    editData?.dueDate ? editData.dueDate.split("T")[0] : ""
+  );
   const [dueDateError, setDueDateError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsSelectMembers(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const validation = () => {
     let isValid = true;
@@ -40,7 +56,7 @@ const CreateTasks = ({ onClose, selectedProject }) => {
     } else {
       const selectedDate = new Date(dueDate);
       const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setDate(tomorrow.getDate());
 
       if (selectedDate < tomorrow) {
         setDueDateError("Due date must be at least tomorrow or later!");
@@ -51,42 +67,48 @@ const CreateTasks = ({ onClose, selectedProject }) => {
     return isValid;
   };
 
-const handleCreate = async () => {
-  if (!validation()) return;
-  setLoading(true);
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/tasks`,
-      {
-        method: "POST",
+  const handleCreate = async () => {
+    if (!validation()) return;
+    setLoading(true);
+    try {
+      const url = editData
+        ? `${import.meta.env.VITE_BACKEND_URL}/api/tasks/edit/${
+            editData._id
+          }/details`
+        : `${import.meta.env.VITE_BACKEND_URL}/api/tasks`;
+
+      const method = editData ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
           discription,
           status,
-          dueDate, 
+          dueDate,
           projectId: selectedProject,
           assignedTo: assignMembers.map((m) => m._id),
         }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        console.error(data.message || "Failed to save task");
+        return;
       }
-    );
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.error(data.message || "Failed to create task");
-      return;
+      toast.success(editData ? "Task updated successfully!" : "Task created!");
+      onClose();
+      navigate("/mytasks");
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error while saving task");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    toast.success("Task created successfully!");
-    onClose();
-    navigate("/mytasks");
-  } catch (error) {
-    console.error(error);
-    toast.error("Server error while creating task");
-  } finally {
-    setLoading(false);
-  }
-};
 
   useEffect(() => {
     if (!selectedProject) return;
@@ -133,7 +155,10 @@ const handleCreate = async () => {
         className="modal-content"
       >
         <div className="modal-header flex align-item-center justify-content-space">
-          <h3 className="modal-title">Create New Task</h3>
+          <h3 className="modal-title">
+            {editData ? "Edit Task" : "Create New Task"}
+          </h3>
+
           <button
             className="modal-close-btn"
             disabled={loading}
@@ -192,7 +217,7 @@ const handleCreate = async () => {
             />
             {dueDateError && <p className="error-message">{dueDateError}</p>}
           </div>
-          <div className="form-group">
+          <div className="form-group" ref={dropdownRef}>
             <label className="form-label" htmlFor="">
               Assignees
             </label>
@@ -277,6 +302,8 @@ const handleCreate = async () => {
                   style={{ height: "20px", width: "80px" }}
                   loading={true}
                 />
+              ) : editData ? (
+                "Update Task"
               ) : (
                 "Create Task"
               )}

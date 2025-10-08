@@ -5,6 +5,8 @@ import {
   getProjectsByWorkspace,
   getProjectMembers,
   UpdateProjectStatus,
+  UpdateProjectDetails,
+  DeleteProjectDetails,
 } from "../controllers/project.controller.js";
 
 const router = express.Router();
@@ -16,5 +18,9 @@ router.get("/:workspaceId", getProjectsByWorkspace);
 router.get("/members/:projectId", getProjectMembers);
 
 router.put("/:projectId/status", UpdateProjectStatus);
+
+router.put("/:projectId/details", UpdateProjectDetails);
+
+router.delete("/:projectId/delete", DeleteProjectDetails);
 
 export default router;

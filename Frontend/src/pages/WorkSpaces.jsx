@@ -14,35 +14,32 @@ const WorkSpaces = () => {
   const [workSpaces, setWorkSpaces] = useState([]);
   const [loading, setLoading] = useState(false);
 
-   useEffect(() => {
-      document.title = "TaskHub | WorkSpaces";
-    }, []);
+  useEffect(() => {
+    document.title = "TaskHub | WorkSpaces";
+  }, []);
+
+  const fetchWorkSpaces = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/workspaces/${currentUser._id}`
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        setWorkSpaces(data.workSpaces || []);
+      } else {
+        console.error("Failed to fetch workspaces:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching workspaces:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!currentUser?._id) return;
-
-    const fetchWorkSpaces = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/workspaces/${
-            currentUser._id
-          }`
-        );
-        const data = await res.json();
-
-        if (res.ok) {
-          setWorkSpaces(data.workSpaces || []);
-        } else {
-          console.error("Failed to fetch workspaces:", data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching workspaces:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchWorkSpaces();
   }, [currentUser]);
 
@@ -134,7 +131,7 @@ const WorkSpaces = () => {
       </div>
       {isCreateWorkSpace && (
         <CreateWorkSpace
-          fetchWorkSpaces={fetchWorkSpaces()}
+          fetchWorkSpaces={fetchWorkSpaces}
           onClose={() => {
             setIsCreateWorkSpace(false);
           }}

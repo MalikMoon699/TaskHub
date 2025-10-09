@@ -31,7 +31,7 @@ router.get("/invite/decline/:token", declineWorkspaceInvite);
 
 router.put("/workspace/:workspaceId", updateWorkspace);
 router.put("/workspace/:workspaceId/transfer", transferWorkspaceOwnership);
-router.delete("/workspace/:workspaceId", deleteWorkspace);
+router.delete("/:workspaceId/delete", deleteWorkspace);
 
 
 export default router;

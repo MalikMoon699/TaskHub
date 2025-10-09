@@ -151,7 +151,7 @@ const Settings = () => {
       const res = await fetch(
         `${
           import.meta.env.VITE_BACKEND_URL
-        }/api/workspaces/workspace/${selectedWorkSpace}`,
+        }/api/workspaces/${selectedWorkSpace}/delete`,
         { method: "DELETE" }
       );
 

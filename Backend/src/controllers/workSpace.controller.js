@@ -4,6 +4,8 @@ import Invite from "../models/invite.model.js";
 import { transporter } from "../config/mailer.js";
 import WorkSpaces from "../models/workSpace.model.js";
 import User from "../models/user.model.js";
+import Project from "../models/project.model.js";
+import Task from "../models/task.model.js";
 
 export const createWorkSpace = async (req, res) => {
   try {
@@ -306,22 +308,34 @@ export const transferWorkspaceOwnership = async (req, res) => {
 export const deleteWorkspace = async (req, res) => {
   try {
     const { workspaceId } = req.params;
-
     const workspace = await WorkSpaces.findById(workspaceId);
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" });
     }
-
+    const projects = await Project.find({ workSpaces: workspaceId }).select(
+      "_id"
+    );
+    const projectIds = projects.map((p) => p._id);
+    if (projectIds.length > 0) {
+      await Task.deleteMany({ project: { $in: projectIds } });
+    }
+    await Project.deleteMany({ workSpaces: workspaceId });
     await WorkSpaces.findByIdAndDelete(workspaceId);
-
     await User.updateMany(
       { workSpaces: workspaceId },
       { $pull: { workSpaces: workspaceId } }
     );
 
-    res.json({ message: "Workspace deleted successfully" });
+    console.log(
+      `✅ Workspace (${workspaceId}) deleted — removed ${projectIds.length} projects and their tasks`
+    );
+    return res
+      .status(200)
+      .json({ message: "Workspace and all related data deleted successfully" });
   } catch (error) {
     console.error("Error deleting workspace:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Error deleting workspace", error: error.message });
   }
 };

@@ -141,7 +141,7 @@ const handleCreate = async () => {
         ? "Project updated successfully!"
         : "Project created successfully!"
     );
-    fetchProjects();
+    fetchProjects && fetchProjects();
     onClose();
   } catch (error) {
     console.error(error);

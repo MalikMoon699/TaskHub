@@ -1,6 +1,7 @@
 // src/controllers/project.controller.js
 import Project from "../models/project.model.js";
 import WorkSpaces from "../models/workSpace.model.js";
+import Task from "../models/task.model.js";
 
 export const createProject = async (req, res) => {
   try {
@@ -145,18 +146,16 @@ export const DeleteProjectDetails = async (req, res) => {
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
+    await Task.deleteMany({ project: projectId });
 
-    // Remove project reference from all workspaces
     await WorkSpaces.updateMany(
       { projects: projectId },
       { $pull: { projects: projectId } }
     );
-
-    // Delete the project itself
     await Project.findByIdAndDelete(projectId);
 
     res.status(200).json({
-      message: "Project deleted successfully",
+      message: "Project and its related tasks deleted successfully",
       projectId,
     });
   } catch (error) {

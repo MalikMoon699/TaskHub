@@ -18,12 +18,10 @@ const Chart = ({ tasksData }) => {
   const dataset = useMemo(() => {
     if (!tasksData || tasksData.length === 0) return [];
 
-    const startOfWeek = moment
-      .min(tasksData?.map((t) => moment(t.updatedAt)))
-      .startOf("isoWeek");
+    const startOfWeek = moment().startOf("isoWeek");
+    const endOfWeek = moment().endOf("isoWeek");
 
     const grouped = {};
-
     for (let i = 0; i < 7; i++) {
       const date = startOfWeek.clone().add(i, "days");
       grouped[date.format("YYYY-MM-DD")] = {
@@ -36,8 +34,11 @@ const Chart = ({ tasksData }) => {
     }
 
     tasksData.forEach((task) => {
-      const date = moment(task.updatedAt).format("YYYY-MM-DD");
-      if (grouped[date]) grouped[date][task.status] += 1;
+      const updated = moment(task.updatedAt);
+      if (updated.isBetween(startOfWeek, endOfWeek, null, "[]")) {
+        const date = updated.format("YYYY-MM-DD");
+        if (grouped[date]) grouped[date][task.status] += 1;
+      }
     });
 
     return Object.values(grouped).map((day) => ({

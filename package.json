@@ -1,0 +1,25 @@
+{
+  "name": "taskhub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "concurrently \"npm run dev --prefix Backend\" \"npm run dev --prefix Frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MalikMoon699/TaskHub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MalikMoon699/TaskHub/issues"
+  },
+  "homepage": "https://github.com/MalikMoon699/TaskHub#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

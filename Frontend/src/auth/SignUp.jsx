@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/Auth.css";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { GoogleLogin } from "@react-oauth/google";
 import Loader from "../components/Loader";
 
@@ -58,7 +58,7 @@ const SignUp = () => {
       }
 
       toast.success("Account created! Please login.");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Signup failed:", error);
     } finally {
@@ -84,7 +84,7 @@ const SignUp = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         toast.success("Google signup successful!");
-        navigate("/");
+        navigate("/dashboard");
       } else {
         toast.error(data.message || "Google signup failed");
       }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/Auth.css";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { GoogleLogin } from "@react-oauth/google";
 import Loader from "../components/Loader";
 
@@ -52,7 +52,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
       setEmail("");
       setPassword("");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
     } finally {

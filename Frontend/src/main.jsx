@@ -3,8 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import App from "./App";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -16,7 +15,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <App />
         </GoogleOAuthProvider>
-        <ToastContainer draggable pauseOnFocusLoss={false} />
+        <Toaster
+          richColors
+          position="bottom-right"
+          dismissible
+          toastOptions={{
+            duration: 4000,
+          }}
+        />
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

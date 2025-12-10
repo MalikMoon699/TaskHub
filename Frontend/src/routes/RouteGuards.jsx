@@ -8,7 +8,7 @@ export const ProtectedRoute = ({
   requireOwner = false,
 }) => {
   const { authAllow, loading, currentUser } = useAuth();
-  const { workspaceData } = useOutletContext() || {};
+  const { workspaceData, workspaceLoading } = useOutletContext() || {};
 
   if (loading)
     return (
@@ -28,8 +28,13 @@ export const ProtectedRoute = ({
     return <Navigate to="/workspace" replace />;
   }
 
-  if (requireOwner && workspaceData?.createdBy !== currentUser?._id) {
-    return <Navigate to="/" replace />;
+  if (
+    !loading &&
+    !workspaceLoading &&
+    requireOwner &&
+    workspaceData?.createdBy !== currentUser?._id
+  ) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -37,7 +42,6 @@ export const ProtectedRoute = ({
 
 export const PublicRoute = ({ children }) => {
   const { authAllow, loading } = useAuth();
-  const location = useLocation();
 
   if (loading)
     return (
@@ -48,9 +52,10 @@ export const PublicRoute = ({ children }) => {
       />
     );
 
-  if (authAllow && location.pathname.startsWith("/invite/")) {
-    return children;
+
+  if (authAllow) {
+    return <Navigate to="/dashboard" replace />;
   }
 
-  return authAllow ? <Navigate to="/" replace /> : children;
+  return children;
 };

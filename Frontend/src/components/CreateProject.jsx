@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useNavigate, useOutletContext } from "react-router";
 
 const CreateProject = ({ onClose, fetchProjects, editData }) => {

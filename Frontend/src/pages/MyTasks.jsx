@@ -14,12 +14,10 @@ const MyTasks = () => {
 
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [isSelecter, setIsSelecter] = useState(false);
   const [selectedProject, setSelectedProject] = useState(() => {
     return localStorage.getItem("selectedProject") || null;
   });
   const [editTask, setEditTask] = useState(null);
-
   const [activeTab, setActiveTab] = useState("alltasks");
   const [isCreateTask, setIsCreateTask] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,14 +25,12 @@ const MyTasks = () => {
   const [isDetail, setIsDetail] = useState(null);
   const [contextMenu, setContextMenu] = useState(null);
 
-  const dropdownRef = useRef(null);
-
   useEffect(() => {
     const handleClick = () => setContextMenu(null);
     window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   }, []);
-  
+
   const handleRightClick = (e, task) => {
     e.preventDefault();
     setContextMenu({
@@ -113,17 +109,6 @@ const MyTasks = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsSelecter(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
     if (location.state?.selectedProject) {
       setSelectedProject(location.state.selectedProject);
     }
@@ -178,19 +163,16 @@ const MyTasks = () => {
     <div className="task-container">
       <div className="local-header flex align-item-center justify-content-space">
         <h3 className="local-header-title">Tasks</h3>
-        <div className="workspace-selector-container" ref={dropdownRef}>
+        <div className="workspace-selector-container">
           <div
-            className="workspace-selector"
+            className="workspace-selector workspace-dropdown-right"
             style={{ width: "130px" }}
-            onClick={() => setIsSelecter(!isSelecter)}
           >
             <span className="selector-workspace-name">
               {projects.find((p) => p._id === selectedProject)?.title ||
                 "Select Project"}
             </span>
             <ChevronDownIcon size={12} className="selector-workspace-icon" />
-          </div>
-          {isSelecter && (
             <div style={{ right: "0px" }} className="workspace-dropdown">
               {projects.map((item) => (
                 <div
@@ -198,14 +180,13 @@ const MyTasks = () => {
                   className="workspace-dropdown-item"
                   onClick={() => {
                     setSelectedProject(item._id);
-                    setIsSelecter(false);
                   }}
                 >
                   {item.title}
                 </div>
               ))}
             </div>
-          )}
+          </div>
         </div>
       </div>
       <div className="flex align-item-center justify-content-start task-selected-project-info">
@@ -252,7 +233,6 @@ const MyTasks = () => {
           <button
             onClick={() => {
               setIsCreateTask(true);
-              setIsSelecter(false);
             }}
             className="task-add-btn"
           >
@@ -294,7 +274,7 @@ const MyTasks = () => {
                         setIsDetail(task);
                         setIsDetailModal(true);
                       }}
-                      onContextMenu={(e) =>{
+                      onContextMenu={(e) => {
                         if (workspaceData?.createdBy === currentUser?._id) {
                           handleRightClick(e, task);
                         }

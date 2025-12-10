@@ -1,32 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/styles/Topbar.css";
 import { useAuth } from "../contexts/AuthContext";
 import { Bell, ChevronDown, X } from "lucide-react";
 import CreateWorkSpace from "./CreateWorkSpace";
 import Loader from "./Loader";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
   const { currentUser } = useAuth();
   const [fullName, setFullName] = useState("");
-  const [isSelecter, setIsSelecter] = useState(false);
   const [isCreateWorkSpace, setIsCreateWorkSpace] = useState(false);
   const [workSpaces, setWorkSpaces] = useState([]);
   const [isDetails, setIsDetails] = useState(false);
   const [loading, setLoading] = useState(false);
-
-   const dropdownRef = useRef(null);
-
-   useEffect(() => {
-     const handleClickOutside = (event) => {
-       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-         setIsSelecter(false);
-       }
-     };
-
-     document.addEventListener("mousedown", handleClickOutside);
-     return () => document.removeEventListener("mousedown", handleClickOutside);
-   }, []);
 
   useEffect(() => {
     if (!currentUser?._id) return;
@@ -102,20 +88,14 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
   return (
     <div className="topbar-container">
       <div className="topbar-left-side">
-        <div className="workspace-selector-container" ref={dropdownRef}>
-          <div
-            className="workspace-selector"
-            onClick={() => setIsSelecter(!isSelecter)}
-          >
+        <div className="workspace-selector-container">
+          <div className="workspace-selector">
             <span className="selector-workspace-name">
               {workSpaces.find((ws) => ws._id === selectedWorkSpace)?.name ||
                 "Select Workspace"}
             </span>
             <ChevronDown size={12} className="selector-workspace-icon" />
-          </div>
-
-          {isSelecter && (
-            <div className="workspace-dropdown">
+            <div className="workspace-dropdown workspace-dropdown-left">
               {workSpaces.map((item) => (
                 <div
                   key={item._id}
@@ -128,7 +108,6 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
                   className="workspace-dropdown-item"
                   onClick={() => {
                     setSelectedWorkSpace(item._id);
-                    setIsSelecter(false);
                   }}
                 >
                   <span
@@ -143,30 +122,24 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
               <div
                 onClick={() => {
                   setIsCreateWorkSpace(true);
-                  setIsSelecter(false);
                 }}
                 className="workspace-dropdown-create"
               >
                 + Create Workspace
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <div className="flex align-item-center justify-content-end topbar-right-side">
-        <div className="topbar-actions flex align-item-center justify-content-center ">
-          <button className="topbar-action-btn">
-            <Bell size={18} />
-          </button>
-          <button
-            onClick={() => {
-              setIsDetails(true);
-            }}
-            className="topbar-profile-btn"
-          >
-            {getFirstLetter()}
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            setIsDetails(true);
+          }}
+          className="topbar-profile-btn"
+        >
+          {getFirstLetter()}
+        </button>
       </div>
       {isCreateWorkSpace && (
         <CreateWorkSpace
@@ -217,6 +190,9 @@ const Topbar = ({ selectedWorkSpace, setSelectedWorkSpace }) => {
                     cursor: "pointer",
                     borderRadius: "4px",
                     boxShadow: " 0px 0px 10px #00000017",
+                  }}
+                  onClick={() => {
+                    toast.info("This feauture not availbale now.");
                   }}
                 >
                   Change Avatar

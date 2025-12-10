@@ -15,6 +15,7 @@ import Settings from "./pages/Settings";
 import AppLayout from "./layouts/AppLayout";
 import Projects from "./pages/Projects";
 import InvitePage from "./pages/InvitePage";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   const { currentUser } = useAuth();
@@ -23,7 +24,15 @@ const App = () => {
     <Routes>
       <Route element={<AppLayout />}>
         <Route
-          path="/"
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/:id"
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -115,6 +124,7 @@ const App = () => {
         }
       />
 
+      <Route path="/" element={<LandingPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

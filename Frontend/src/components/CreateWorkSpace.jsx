@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import Loader from "./Loader";
 

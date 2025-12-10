@@ -20,13 +20,15 @@ const Sidebar = ({ workspaceData, isSideBar, toggleMenuOpen }) => {
 
   return (
     <div
-      className={`sidebar-container flex align-item-center justify-content-space ${isSideBar ? "sidebar-open":""}`}
+      className={`sidebar-container flex align-item-center justify-content-space ${
+        isSideBar ? "sidebar-open" : ""
+      }`}
     >
       <div>
         <div className="mobile-sidebar-header flex align-items-center justify-content-space">
           <div
             onClick={() => {
-              navigate("/");
+              navigate("/dashboard");
               toggleMenuOpen();
             }}
             className="sidebar-header flex align-items-center justify-content-start"
@@ -45,11 +47,11 @@ const Sidebar = ({ workspaceData, isSideBar, toggleMenuOpen }) => {
         <div className="sidebar-body">
           <div
             onClick={() => {
-              navigate("/");
+              navigate("/dashboard");
               toggleMenuOpen();
             }}
             className={`sidebar-item flex align-items-center justify-content-start ${
-              location.pathname === "/" ? "active" : ""
+              location.pathname.startsWith("/dashboard") ? "active" : ""
             }`}
           >
             <span className="sidebar-item-icon">

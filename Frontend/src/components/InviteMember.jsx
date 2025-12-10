@@ -2,7 +2,7 @@ import { SendHorizontal, X } from "lucide-react";
 import React, { useState } from "react";
 import { useOutletContext } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Loader from "./Loader";
 
 const InviteMember = ({ onClose }) => {
@@ -38,7 +38,7 @@ const InviteMember = ({ onClose }) => {
     } catch (err) {
       console.error(err);
       setEmailError("Something went wrong");
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -81,11 +81,16 @@ const InviteMember = ({ onClose }) => {
             onClick={handleSendInvite}
             className="create-btn"
           >
-            {loading ? 
-            <Loader loading={true} color="white" size="20" style={{height:"23px", width:"23px"}}/>
-            : 
-            <SendHorizontal />
-            }
+            {loading ? (
+              <Loader
+                loading={true}
+                color="white"
+                size="20"
+                style={{ height: "23px", width: "23px" }}
+              />
+            ) : (
+              <SendHorizontal />
+            )}
           </button>
         </div>
       </div>

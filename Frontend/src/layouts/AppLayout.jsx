@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/Topbar";
 import logo from "../assets/images/logo.png";
 import { Menu } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 const AppLayout = () => {
+  const { currentUser } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [isSideBar, setIsSideBar] = useState(false);
   const [selectedWorkSpace, setSelectedWorkSpace] = useState(
     () => localStorage.getItem("selectedWorkSpace") || null
   );
+  const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [workspaceData, setWorkspaceData] = useState(null);
 
   useEffect(() => {
@@ -25,6 +29,7 @@ const AppLayout = () => {
 
   const fetchWorkspace = async () => {
     if (!selectedWorkSpace) return;
+    setWorkspaceLoading(true);
     try {
       const res = await fetch(
         `${
@@ -39,12 +44,27 @@ const AppLayout = () => {
       }
     } catch (err) {
       console.error("Error fetching workspace:", err);
+    }finally{
+      setWorkspaceLoading(false);
     }
   };
 
   const toggleMenuOpen = () => {
     setIsSideBar((prev) => !prev);
   };
+
+  const isDashboard = location.pathname === "/dashboard";
+
+  useEffect(() => {
+    if (!selectedWorkSpace || !isDashboard) return;
+
+    const currentPath = location.pathname;
+    const targetPath = `/dashboard/${selectedWorkSpace}`;
+
+    if (currentPath !== targetPath) {
+      navigate(targetPath, { replace: true });
+    }
+  }, [selectedWorkSpace, location.pathname]);
 
   return (
     <div className="app-container">
@@ -61,7 +81,7 @@ const AppLayout = () => {
           <div
             className="logo-container"
             onClick={() => {
-              navigate("/");
+              navigate("/dashboard");
             }}
           >
             <img src={logo} alt="Logo" />
@@ -77,6 +97,7 @@ const AppLayout = () => {
         <div className="app-content">
           <Outlet
             context={{
+              workspaceLoading,
               selectedWorkSpace,
               setSelectedWorkSpace,
               workspaceData,

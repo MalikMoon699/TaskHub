@@ -64,12 +64,11 @@ const Dashboard = () => {
     return workspaceData.projects.flatMap((project) => project.tasks || []);
   }, [workspaceData, selectedWorkSpace]);
 
-useEffect(() => {
-  if (workspaceData) {
-    fetchTasksData(allTasks);
-  }
-}, [workspaceData, selectedWorkSpace, allTasks, fetchTasksData]);
-
+  useEffect(() => {
+    if (workspaceData) {
+      fetchTasksData(allTasks);
+    }
+  }, [workspaceData, selectedWorkSpace, allTasks, fetchTasksData]);
 
   const totalProjects = workspaceData?.projects?.length || 0;
   const inProgressProjects = (workspaceData?.projects || []).filter(

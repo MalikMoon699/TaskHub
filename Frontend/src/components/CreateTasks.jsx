@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Loader from "./Loader";
 import { useNavigate } from "react-router";
 
@@ -108,7 +108,6 @@ const CreateTasks = ({ onClose, selectedProject, editData }) => {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     if (!selectedProject) return;

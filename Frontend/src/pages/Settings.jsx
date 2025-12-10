@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router";
 import { X } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import Loader from "../components/Loader";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const Settings = () => {
   const { currentUser } = useAuth();
@@ -35,9 +35,9 @@ const Settings = () => {
     "DarkBlue",
   ];
 
-    useEffect(() => {
-        document.title = "TaskHub | Settings";
-      }, []);
+  useEffect(() => {
+    document.title = "TaskHub | Settings";
+  }, []);
 
   const fetchWorkspace = async () => {
     setLoading(true);
@@ -170,7 +170,6 @@ const Settings = () => {
     }
   };
 
-
   return loading ? (
     <Loader
       loading={true}
@@ -206,7 +205,11 @@ const Settings = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="" className="form-label">
+            <label
+              htmlFor=""
+              style={{ margin: "18px 0px -1px" }}
+              className="settings-label"
+            >
               Workspace Color
             </label>
             <div className="color-list flex align-item-center justify-content-start">

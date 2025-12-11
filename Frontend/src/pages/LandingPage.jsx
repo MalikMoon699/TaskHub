@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "../assets/styles/LandingPage.css";
 import { useAuth } from "../contexts/AuthContext";
 import { landingPageButton } from "../services/LandingHelper";
 import { useNavigate } from "react-router";
 import LandingHero from "../components/LandingHero";
+import { Menu, X } from "lucide-react";
 
 const LandingPage = () => {
   const { authAllow } = useAuth();
   const navigate = useNavigate();
+  const [isSideBar, setSidebar] = useState(false);
 
   const buttonData = landingPageButton(authAllow);
 
@@ -16,9 +18,16 @@ const LandingPage = () => {
       <header className="landing-page-header">
         <nav className="landing-page-nav">
           <div className="landing-page-logo">
-            <a href="#hero">TaskHub</a>
+            <a
+              onClick={() => {
+                setSidebar(false);
+              }}
+              href="#hero"
+            >
+              TaskHub
+            </a>
           </div>
-          <ul className="landing-page-nav-links">
+          <ul className="landing-page-nav-links desktop-flex">
             <li>
               <a href="#features">Features</a>
             </li>
@@ -38,11 +47,56 @@ const LandingPage = () => {
           <button
             onClick={() => navigate(buttonData.nav)}
             style={{ padding: buttonData.padding }}
-            className="landing-page-btn-primary"
+            className="landing-page-btn-primary desktop-block"
           >
             {buttonData.title}
           </button>
+          <button
+            onClick={() => setSidebar(!isSideBar)}
+            style={{ padding: "8px 9px", fontSize: "0px" }}
+            className="landing-page-btn-primary mobile-block"
+          >
+            {isSideBar ? <X /> : <Menu />}
+          </button>
         </nav>
+        {isSideBar && (
+          <div className="mobile-flex mobile-nav-dropdown">
+            <ul className="landing-page-nav-links mobile-flex">
+              <li>
+                <a onClick={() => setSidebar(false)} href="#features">
+                  Features
+                </a>
+              </li>
+              <li>
+                <a onClick={() => setSidebar(false)} href="#workspaces">
+                  Workspaces
+                </a>
+              </li>
+              <li>
+                <a onClick={() => setSidebar(false)} href="#projects">
+                  Projects
+                </a>
+              </li>
+              <li>
+                <a onClick={() => setSidebar(false)} href="#tasks">
+                  Tasks
+                </a>
+              </li>
+              <li>
+                <a onClick={() => setSidebar(false)} href="#invite">
+                  Invite
+                </a>
+              </li>
+            </ul>
+            <button
+              onClick={() => navigate(buttonData.nav)}
+              style={{ padding: buttonData.padding }}
+              className="landing-page-btn-primary mobile-block"
+            >
+              {buttonData.title}
+            </button>
+          </div>
+        )}
       </header>
       <section className="landing-page-hero">
         <LandingHero />

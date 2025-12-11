@@ -10,10 +10,10 @@ const LandingHero = () => {
     setCurrent((prev) => (prev + 1) % landingHeroSlides.length);
   };
 
-  // useEffect(() => {
-  //   const timer = setInterval(nextSlide, 5000);
-  //   return () => clearInterval(timer);
-  // }, []);
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div className="landing-hero-container">
